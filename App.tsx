@@ -1,21 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View} from 'react-native';
+import images from './app/config/images';
+import ListingDetailsScreen from './app/screens/ListingDetailsScreen';
+
+import ListingsScreen from './app/screens/Listings.Screen';
 
 export default function App() {
+
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <ListingDetailsScreen title={'title'} price={"100"} description={"this is a fire description"} image={images.chair}></ListingDetailsScreen>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  container:{
+    flex:1
+  }
 });
