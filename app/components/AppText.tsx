@@ -1,5 +1,7 @@
 import React from 'react'
-import { Platform, StyleProp, StyleSheet, Text } from 'react-native'
+import { Platform, StyleProp, StyleSheet, Text } from 'react-native';
+
+import defaultStyles from '../config/default.styles'
 
 type AppTextProps = {
     text: string,
@@ -8,16 +10,13 @@ type AppTextProps = {
 
 function  AppText({ text, style }: AppTextProps) {
     return (
-        <Text style={[styles.text, style]} >{text}</Text>
+        <Text style={[defaultStyles.text, style]} >{text}</Text>
     )
 }
 
 export default AppText
 
 const styles = StyleSheet.create({
-    text:{
-        fontSize: 18,
-        fontFamily : Platform.OS === "android" ? "Roboto" : "Avenir"
-    }
+    
 })
 

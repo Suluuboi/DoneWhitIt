@@ -5,14 +5,18 @@ import colors from '../config/colors';
 import AppText from './AppText';
 
 type CardProps = {
-    image: any,
-    title: string,
-    sub_title: string
+    image       : any,
+    title       : string,
+    sub_title   : string
+    onPress?    : ()=>void
 }
 
-export default function Card({image, title, sub_title}: CardProps) {
+export default function Card({image, title, sub_title, onPress}: CardProps) {
     return (
-        <TouchableOpacity style={styles.card_container}>
+        <TouchableOpacity 
+            style={styles.card_container}
+            onPress={onPress}
+        >
 
             <Image 
                 resizeMode={"cover"} 

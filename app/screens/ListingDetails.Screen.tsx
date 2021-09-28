@@ -21,7 +21,11 @@ const ListingDetailsScreen = ({title, price, description, image}:ListingDetailsS
                 <AppText style={styles.price} text={price}/>
 
                 <View style={styles.user_container}>
-                    <ListItem image={images.logo} title={"Hans Mbangu"} sub_title={"7 listings"} />
+                    <ListItem 
+                        image={images.logo} 
+                        title={"Hans Mbangu"} 
+                        sub_title={"7 listings"} 
+                    />
                 </View>
                 
             </View>

@@ -1,17 +1,15 @@
+//import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View} from 'react-native';
-import images from './app/config/images';
-import ListingDetailsScreen from './app/screens/ListingDetailsScreen';
 
-import ListingsScreen from './app/screens/Listings.Screen';
-import ViewImageScreen from './app/screens/ViewImage.Screen';
+import InputPlaygroudScreen from './app/screens/InputPlaygroud.Screen';
+
 
 export default function App() {
 
-
   return (
     <View style={styles.container}>
-      <ViewImageScreen/>
+        <InputPlaygroudScreen></InputPlaygroudScreen>
     </View>
   );
 }
