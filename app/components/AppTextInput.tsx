@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     icon:{
         marginRight: 10,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        paddingTop: 3
     }
 })

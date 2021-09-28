@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, View} from 'react-native';
 
 import InputPlaygroudScreen from './app/screens/InputPlaygroud.Screen';
+//import "react-native-gesture-handler"
 
 
 export default function App() {
