@@ -2,26 +2,26 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { Button, FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import defaultStyles from '../config/default.styles'
-import { Category } from '../screens/InputPlaygroud.Screen'
+import { Selection } from '../screens/InputPlaygroud.Screen'
 import AppText from './AppText'
 import CustomSafeAreaView from './CustomSafeAreaView'
 import PickerItem from './PickerItem'
 
+/**This creates a slection model */
+
 type AppPickerProps={
     placeholder: string,
-    items: Category[],
-    selected_item: Category | undefined,
+    items: Selection[],
+    selected_item: Selection,
     onSelectItem:(item:any)=>void //what happens when you select an item
 }
 
 export default function AppPicker({ placeholder, items, selected_item, onSelectItem}: AppPickerProps) {
 
-    const [modalVisable, setModalVisable] = useState(false)
-    //const [pickerText, setPickerText] = useState(placeholder)
+    const [modalVisable, setModalVisable] = useState(false);
 
-    function selectCategory(category:Category ){
+    function selectCategory(category:Selection ){
         setModalVisable(false)
-        //setPickerText(category.lable)
         onSelectItem(category)
     }
 

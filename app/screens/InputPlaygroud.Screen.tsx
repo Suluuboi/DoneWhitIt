@@ -5,7 +5,7 @@ import AppText from '../components/AppText'
 import AppTextInput from '../components/AppTextInput'
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 
-export type Category ={
+export type Selection ={
   lable: string,
   value: number
 }
@@ -14,11 +14,11 @@ const categories = [
   {lable:"Funiture", value:1},
   {lable:"Clothing", value:2},
   {lable:"Cameras", value:3},
-] as Category[]
+] as Selection[]
 
 export default function InputPlaygroudScreen() {
 
-    const [category, setCategory] = useState()
+    const [category, setCategory] = useState(categories[0])
 
     return (
         <CustomSafeAreaView style={{flex:1}}>
