@@ -1,17 +1,29 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Button, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import defaultStyles from '../config/default.styles'
+import { Category } from '../screens/InputPlaygroud.Screen'
 import AppText from './AppText'
 import CustomSafeAreaView from './CustomSafeAreaView'
+import PickerItem from './PickerItem'
 
 type AppPickerProps={
-    placeholder ?: string
+    placeholder: string,
+    items: Category[],
+    selected_item: Category | undefined,
+    onSelectItem:(item:any)=>void //what happens when you select an item
 }
 
-export default function AppPicker({ placeholder}: AppPickerProps) {
+export default function AppPicker({ placeholder, items, selected_item, onSelectItem}: AppPickerProps) {
 
     const [modalVisable, setModalVisable] = useState(false)
+    //const [pickerText, setPickerText] = useState(placeholder)
+
+    function selectCategory(category:Category ){
+        setModalVisable(false)
+        //setPickerText(category.lable)
+        onSelectItem(category)
+    }
 
     return (
         <React.Fragment>
@@ -24,7 +36,7 @@ export default function AppPicker({ placeholder}: AppPickerProps) {
                         size={20}
                                                         style={styles.icon}
                     />}
-                    {placeholder && <AppText style={styles.text} text={placeholder}/>}
+                    {placeholder && <AppText style={styles.text} text={selected_item ? selected_item.lable : placeholder}/>}
 
                 </View>
 
@@ -36,6 +48,14 @@ export default function AppPicker({ placeholder}: AppPickerProps) {
             >
                 <CustomSafeAreaView>
                     <Button onPress={()=>setModalVisable(false)} title={'Close'}/>
+                    <FlatList
+                        data={items}
+                        keyExtractor={item=>item.value.toString()}
+                        renderItem={({item})=>
+                            <PickerItem onPress={()=>selectCategory(item)} category={item}/>
+                        }
+                    />
+                        
                 </CustomSafeAreaView>
                 
             </Modal>
