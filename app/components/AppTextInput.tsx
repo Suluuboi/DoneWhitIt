@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React from 'react'
-import { KeyboardTypeOptions, Platform, StyleSheet, Text, TextInput, View } from 'react-native'
+import { KeyboardTypeOptions, NativeSyntheticEvent, Platform, StyleSheet, Text, TextInput, TextInputFocusEventData, View } from 'react-native'
 import colors from '../config/colors';
 
 
@@ -12,15 +12,16 @@ import AppButton from './AppButton';
 type AppTextInputProps={
     icon_name   ?: any,
     placeholder : string,
-    onChange: (text: string)=>void
+    onChangeText: (text: string)=>void
     autoCorrect?: boolean
     autoCapitalize?: any
     keyboardType?: KeyboardTypeOptions,
     textContentType?: any//only works on ios for auto fill
     secureTextEntry?: boolean //shop the text or not
+    onBlur: any//NativeSyntheticEvent<TextInputFocusEventData>
 }
 
-export default function AppTextInput({icon_name,placeholder, onChange ,autoCorrect, keyboardType,autoCapitalize, textContentType, secureTextEntry}:AppTextInputProps) {
+export default function AppTextInput({icon_name,placeholder, onChangeText ,autoCorrect, keyboardType,autoCapitalize, textContentType, secureTextEntry, onBlur}:AppTextInputProps) {
     return (
         <View style={styles.container}> 
             {icon_name &&   <MaterialCommunityIcons 
@@ -35,9 +36,10 @@ export default function AppTextInput({icon_name,placeholder, onChange ,autoCorre
                 autoCapitalize={autoCapitalize ? autoCapitalize: "none"}
                 autoCorrect={autoCorrect? autoCorrect: true}
                 keyboardType={keyboardType ? keyboardType : "email-address"}
-                onChangeText={(text)=>onChange(text)}
+                onChangeText={(text)=>onChangeText(text)}
                 textContentType={textContentType ? textContentType : "emailAddress"}
                 secureTextEntry={secureTextEntry ? secureTextEntry: false}
+                onBlur={onBlur ? onBlur : undefined}
             />
 
         </View>

@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { Formik } from 'formik'
+import { Formik } from 'formik';
+import * as Yup from 'yup' 
 
 import AppButton from '../components/AppButton'
 import AppTextInput from '../components/AppTextInput'
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import colors from '../config/colors'
-import images from '../config/images'
+import images from '../config/images';
+import AppText from '../components/AppText';
+import ErrorMessage from '../components/ErrorMessage';
+
+const validation_schema = Yup.object().shape({
+    email: Yup.string().required().email().label("Email"),
+    password: Yup.string().required().min(4).label("Password")
+});
 
 export default function LoginScreen() {
 
@@ -27,25 +35,30 @@ export default function LoginScreen() {
             <Formik
                 initialValues={{email:'', password:''}}
                 onSubmit={values=>console.log(values)}
+                validationSchema={validation_schema}
             >
-                {({handleChange, handleSubmit}) => (
+                {({handleChange, handleSubmit, errors, setFieldTouched, touched}) => (
                     <>
                         <AppTextInput 
                             icon_name="email" 
                             placeholder={"email"}
                             autoCorrect={false}
-                            onChange={handleChange('email')}    
+                            onChangeText={handleChange('email')}    
+                            onBlur={()=>setFieldTouched('email')}
                         />
-
+                        {/** Error Message*/}
+                        <ErrorMessage error={errors.email} visable ={ touched.email }/>
                         <AppTextInput
                             textContentType={"password"}
                             icon_name={"key"}
-                            placeholder={"password"}
+                            placeholder={"Password"}
                             keyboardType={"default"}
                             secureTextEntry
-                            onChange={(password)=>setPassword(password)}
+                            onChangeText={handleChange('password')}
+                            onBlur={()=>setFieldTouched('password')}
                         />
-
+                        {/*errors.password && <AppText style={{color:'red'}} text={errors.password }/>*/}
+                        <ErrorMessage error={errors.password} visable={touched.password} />
                         <AppButton 
                             text={"Logon"}
                             button_color={colors.primary} 
