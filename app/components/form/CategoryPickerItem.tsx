@@ -1,24 +1,47 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { Selection } from '../../screens/InputPlaygroud.Screen';
+import AppText from '../AppText';
 import Icon from '../Icon'
+import { MaterialCommunityIconsSet } from '../icon/types';
 
-type CategoryPickerItemProps={
-    category: Selection,
-    onPress: ()=>void
+type ItemProperties = {
+    label: string,
+    background_color: string,
+    icon: MaterialCommunityIconsSet
 }
 
-export default function CategoryPickerItem({category, onPress}: CategoryPickerItemProps) {
+type CategoryPickerItemProps={
+    //label: string,
+    onPress: ()=>void
+    item: ItemProperties
+}
+
+export default function CategoryPickerItem({item, onPress}: CategoryPickerItemProps) {
     return (
-        <View style={styles.container}>
-            <Icon/>
-        </View>
+        <TouchableOpacity style={styles.container} onPress={onPress}>
+            
+                <Icon background_color={item.background_color} name={item.icon} />
+                <AppText style={styles.text} text={item.label} />
+
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
-
+        paddingHorizontal: 30,
+        paddingVertical: 15,
+        alignItems: 'center',
+        width: '33%'
+    },
+    icon:{
+        
+    },
+    text:{
+       marginTop: 10,
+       textAlign: "center"
+        
     }
 })

@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { ElementType, useState } from 'react'
 import { Button, FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { number } from 'yup'
 import defaultStyles from '../../config/default.styles'
@@ -16,7 +16,7 @@ type AppPickerProps={
     //selected_item: Selection,
     onSelectItem:(item:Selection)=>any //what happens when you select an item
     width?: number | undefined | string
-    PickerItemComponent?: JSX.Element | undefined //change the picker List component if specified
+    PickerItemComponent?: ElementType<any> | undefined //change the picker List component if specified
 }
 
 export default function AppPicker({ placeholder, items, onSelectItem, width='100%', PickerItemComponent=undefined}: AppPickerProps) {
@@ -58,8 +58,9 @@ export default function AppPicker({ placeholder, items, onSelectItem, width='100
                     <FlatList
                         data={items}
                         keyExtractor={item=>item.value.toString()}
+                        numColumns={PickerItemComponent ? 3 : 1 }
                         renderItem={({item})=>
-                            PickerItemComponent? PickerItemComponent : <PickerItem onPress={()=>selectCategory(item)} category={item}/>
+                            PickerItemComponent? <PickerItemComponent onPress={()=>selectCategory(item)} item={item} /> : <PickerItem onPress={()=>selectCategory(item)} item={item}/>
                         }
                     />
                         

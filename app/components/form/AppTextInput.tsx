@@ -5,11 +5,12 @@ import colors from '../../config/colors';
 
 
 import defaultStyles from '../../config/default.styles';
+import { MaterialCommunityIconsSet } from '../icon/types';
 
 /**Reusable input text Button */
 
 type AppTextInputProps={
-    icon_name   ?: any,
+    icon_name   ?: MaterialCommunityIconsSet,
     placeholder ?: string,
     onChangeText?: (text: string)=>void
     autoCorrect?: boolean
@@ -29,7 +30,7 @@ export default function AppTextInput({icon_name,placeholder, onChangeText ,autoC
         <View style={[styles.container,{width: width}]}> 
             {icon_name &&   <MaterialCommunityIcons 
                                                 color={defaultStyles.colors.medium_grey}
-                                                name={icon_name} 
+                                                name={icon_name as any} 
                                                 size={20}
                                                 style={styles.icon}
                             />}

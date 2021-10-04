@@ -1,11 +1,14 @@
-import React from 'react'
-import { StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text } from 'react-native'
 import * as Yup from 'yup'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import CategoryPickerItem from '../components/form/CategoryPickerItem'
 import { AppFormFieldFormik, AppFormFormik, AppSubmitButtonFormik } from '../components/form/formik'
 import AppPickerFormik from '../components/form/formik/AppPicker.Formik'
+import colors from '../config/colors'
+import defaultStyles from '../config/default.styles'
+import images from '../config/images'
 
 import { Selection } from './InputPlaygroud.Screen'
 
@@ -16,13 +19,19 @@ const validationSchema = Yup.object().shape({
     category: Yup.object().required().nullable().label('Category')
 })
 
-const categories = [
-    {label:"Funiture", value:1},
-    {label:"Clothing", value:2},
-    {label:"Cameras", value:3}
-] as Selection[]
+const categories : Selection[] = [
+    {label:"Funiture", value:1, icon: 'chair-rolling', background_color : defaultStyles.colors.primary },
+    {label:"Clothing", value:2, icon: 'tshirt-crew', background_color: defaultStyles.colors.danger },
+    {label:"Cameras", value:3, icon: 'camera', background_color: 'green'},
+    {label:"Fashion", value:4, icon: 'shoe-heel', background_color : defaultStyles.colors.secondary },
+    {label:"Music & Sound", value:5, icon: 'music', background_color: defaultStyles.colors.danger },
+    {label:"Sport", value:6, icon: 'tennis', background_color: defaultStyles.colors.dark_gey}
+]
 
 export default function ListingEditScreen() {
+
+    const [result, setResult] = useState()
+
     return (
         <CustomSafeAreaView style={styles.container}>
             <AppFormFormik
@@ -32,7 +41,7 @@ export default function ListingEditScreen() {
                     description: '',
                     category:''
                 }}
-                onSubmit={(value)=>console.log(value)}
+                onSubmit={(value)=>setResult(value)}
                 validationSchema={validationSchema}
             >
                 <AppFormFieldFormik  
@@ -54,16 +63,15 @@ export default function ListingEditScreen() {
                     name={'category'}
                     placeholder={'Category'}
                     width={'40%'}
-                    PickerItemComponent={
-                        <CategoryPickerItem />
-                    }
+                    //PickerItemComponent={CategoryPickerItem}
                 />
                 <AppFormFieldFormik
                     placeholder={'Description'}
                     context_field_name={'description'}
                     numberOfLines={3}
                 />
-                <AppSubmitButtonFormik label={'Post'} disabled={true}/>
+                <AppSubmitButtonFormik label={'Post'}/>
+                <Text>{JSON.stringify(result, null,"\t")}</Text>
             </AppFormFormik>
         </CustomSafeAreaView>
     )

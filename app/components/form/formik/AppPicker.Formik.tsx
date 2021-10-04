@@ -1,5 +1,5 @@
 import {  useFormikContext } from 'formik'
-import React from 'react'
+import React, { ElementType } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Selection } from '../../../screens/InputPlaygroud.Screen'
 import AppPicker from '../AppPicker'
@@ -16,7 +16,7 @@ type AppPickerFormikProps = {
     //selectedItem: (st:any)=>any,
     name: string
     width?: string | undefined | number
-    PickerItemComponent?: JSX.Element | undefined
+    PickerItemComponent?: ElementType<any> | undefined
 }
 
 export default function AppPickerFormik({placeholder, items,  name, width, PickerItemComponent}: AppPickerFormikProps) {

@@ -4,7 +4,7 @@ import { Platform, StyleProp, StyleSheet, Text } from 'react-native';
 import defaultStyles from '../config/default.styles'
 
 type AppTextProps = {
-    text: string,
+    text: string
     style?: StyleProp<any>
     numberOfLines?: number | undefined
 }

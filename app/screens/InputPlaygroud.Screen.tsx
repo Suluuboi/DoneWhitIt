@@ -4,14 +4,17 @@ import AppPicker from '../components/form/AppPicker'
 import AppText from '../components/AppText'
 import AppTextInput from '../components/form/AppTextInput'
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
+import { MaterialCommunityIconsSet } from '../components/icon/types'
 
 export type Selection ={
   label: string,
-  value: number
+  value: number,
+  icon?: MaterialCommunityIconsSet,
+  background_color?: string 
 }
 
 const categories = [
-  {label:"Funiture", value:1},
+  {label:"Funiture", value:1, color: 'red', },
   {label:"Clothing", value:2},
   {label:"Cameras", value:3},
 ] as Selection[]
@@ -23,7 +26,7 @@ export default function InputPlaygroudScreen() {
     return (
         <CustomSafeAreaView style={{flex:1}}>
           <AppPicker 
-            selected_item={category}
+            //selected_item={category}
             onSelectItem={(item)=>setCategory(item)}
             items={categories} 
             placeholder={'Category'}
@@ -31,7 +34,9 @@ export default function InputPlaygroudScreen() {
           <AppTextInput 
             icon_name={'email'} 
             placeholder={'Email'} />
-          {/*<TextInput 
+          {/*
+          
+          <TextInput 
             clearButtonMode="always"
             onChangeText={text=>setInput(text)}
             placeholder={'fire input'}
