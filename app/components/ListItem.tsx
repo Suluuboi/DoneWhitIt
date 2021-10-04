@@ -5,6 +5,8 @@ import { Swipeable } from 'react-native-gesture-handler'
 import colors from '../config/colors'
 import AppText from './AppText'
 import Icon from '../components/Icon'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import defaultStyles from '../config/default.styles'
 
 type ListItemProps = {
     image ?             : ImageSourcePropType,
@@ -13,10 +15,11 @@ type ListItemProps = {
     onPress?            : ()=>void,
     renderRightAction?  : any,
     IconComponent?      : JSX.Element,
-    style?              : StyleProp<any>
+    style?              : StyleProp<any>,
+    chevron?             : boolean 
 }
 
-function ListItem({image, IconComponent,title, sub_title, onPress, renderRightAction, style}:ListItemProps){
+function ListItem({image, IconComponent,title, sub_title, onPress, renderRightAction, style, chevron}:ListItemProps){
     return (
         <Swipeable 
             renderRightActions={renderRightAction}    
@@ -40,9 +43,17 @@ function ListItem({image, IconComponent,title, sub_title, onPress, renderRightAc
                 }
 
                 <View style={styles.text_container}>
-                    {title && <AppText style={styles.title} text={title} />}
-                    {sub_title && <AppText style={styles.sub_title} text={sub_title}/>}
+                    {title && <AppText style={styles.title} text={title} numberOfLines={1} />}
+                    {sub_title && <AppText style={styles.sub_title} text={sub_title} numberOfLines={2}/>}
                 </View>
+
+                {   chevron &&
+                    <View style={styles.chevron}>
+                        <MaterialCommunityIcons color={colors.medium_grey} size={20} name={'chevron-right'}>
+                        
+                        </MaterialCommunityIcons>
+                    </View>
+                }
                 
             </View>
         </TouchableHighlight>
@@ -70,8 +81,11 @@ const styles = StyleSheet.create({
         //marginLeft: 10
     },
     text_container:{
-        marginLeft: 10,
-        justifyContent: 'center'
+        flex: 1,
+        //marginLeft: 10,
+        justifyContent: 'center',
+        marginHorizontal: 10
+        
     },
     title:{
         fontSize:16,
@@ -80,5 +94,10 @@ const styles = StyleSheet.create({
     sub_title:{
         fontSize:14,
         color: colors.medium_grey
+    },
+    chevron:{
+        alignSelf: 'center',
+        fontSize: 100,
+        right: 10
     }
 })

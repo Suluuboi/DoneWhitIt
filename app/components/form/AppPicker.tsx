@@ -1,42 +1,49 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { Button, FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
-import defaultStyles from '../config/default.styles'
-import { Selection } from '../screens/InputPlaygroud.Screen'
-import AppText from './AppText'
-import CustomSafeAreaView from './CustomSafeAreaView'
-import PickerItem from './PickerItem'
+import { number } from 'yup'
+import defaultStyles from '../../config/default.styles'
+import { Selection } from '../../screens/InputPlaygroud.Screen'
+import AppText from '../AppText'
+import CustomSafeAreaView from '../CustomSafeAreaView'
+import PickerItem from '../PickerItem'
 
 /**This creates a slection model */
 
 type AppPickerProps={
     placeholder: string,
     items: Selection[],
-    selected_item: Selection,
-    onSelectItem:(item:any)=>void //what happens when you select an item
+    //selected_item: Selection,
+    onSelectItem:(item:Selection)=>any //what happens when you select an item
+    width?: number | undefined | string
+    PickerItemComponent?: JSX.Element | undefined //change the picker List component if specified
 }
 
-export default function AppPicker({ placeholder, items, selected_item, onSelectItem}: AppPickerProps) {
+export default function AppPicker({ placeholder, items, onSelectItem, width='100%', PickerItemComponent=undefined}: AppPickerProps) {
+
+    const [label, setLabel] = useState('')
 
     const [modalVisable, setModalVisable] = useState(false);
 
     function selectCategory(category:Selection ){
         setModalVisable(false)
         onSelectItem(category)
+        setLabel(category.label)
     }
 
     return (
         <React.Fragment>
             <TouchableWithoutFeedback onPress={()=>setModalVisable(true)}>
 
-                <View style={styles.container}> 
+                <View style={[styles.container, {width: width}]}> 
                     {<MaterialCommunityIcons 
                         color={defaultStyles.colors.medium_grey}
                         name={'chevron-down'} 
                         size={20}
                                                         style={styles.icon}
                     />}
-                    {placeholder && <AppText style={styles.text} text={selected_item ? selected_item.lable : placeholder}/>}
+                    {/*placeholder && <AppText style={styles.text} text={label ? label : placeholder}/>*/}
+                    {label ? <AppText style={styles.text} text={label}/> :  <AppText style={styles.placeholder} text={placeholder}/>}
 
                 </View>
 
@@ -52,7 +59,7 @@ export default function AppPicker({ placeholder, items, selected_item, onSelectI
                         data={items}
                         keyExtractor={item=>item.value.toString()}
                         renderItem={({item})=>
-                            <PickerItem onPress={()=>selectCategory(item)} category={item}/>
+                            PickerItemComponent? PickerItemComponent : <PickerItem onPress={()=>selectCategory(item)} category={item}/>
                         }
                     />
                         
@@ -78,6 +85,10 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     text:{
+        flex: 1
+    },
+    placeholder:{
+        color: defaultStyles.colors.medium_grey,
         flex: 1
     }
 })

@@ -6,11 +6,12 @@ import defaultStyles from '../config/default.styles'
 type AppTextProps = {
     text: string,
     style?: StyleProp<any>
+    numberOfLines?: number | undefined
 }
 
-function  AppText({ text, style }: AppTextProps) {
+function  AppText({ text, style, numberOfLines=undefined }: AppTextProps) {
     return (
-        <Text style={[defaultStyles.text, style]} >{text}</Text>
+        <Text numberOfLines={numberOfLines} style={[defaultStyles.text, style]} >{text}</Text>
     )
 }
 

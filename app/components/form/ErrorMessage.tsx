@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 
-import AppText from './AppText'
+import AppText from '../AppText'
 
 /**Display the message in the app taxt if there is an error or flied was touched. */
 

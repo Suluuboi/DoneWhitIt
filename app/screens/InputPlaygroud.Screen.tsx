@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
-import AppPicker from '../components/AppPicker'
+import AppPicker from '../components/form/AppPicker'
 import AppText from '../components/AppText'
-import AppTextInput from '../components/AppTextInput'
+import AppTextInput from '../components/form/AppTextInput'
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 
 export type Selection ={
-  lable: string,
+  label: string,
   value: number
 }
 
 const categories = [
-  {lable:"Funiture", value:1},
-  {lable:"Clothing", value:2},
-  {lable:"Cameras", value:3},
+  {label:"Funiture", value:1},
+  {label:"Clothing", value:2},
+  {label:"Cameras", value:3},
 ] as Selection[]
 
 export default function InputPlaygroudScreen() {
@@ -28,7 +28,9 @@ export default function InputPlaygroudScreen() {
             items={categories} 
             placeholder={'Category'}
           />
-          <AppTextInput icon_name={'email'} placeholder={'Email'} />
+          <AppTextInput 
+            icon_name={'email'} 
+            placeholder={'Email'} />
           {/*<TextInput 
             clearButtonMode="always"
             onChangeText={text=>setInput(text)}

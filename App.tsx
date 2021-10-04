@@ -1,9 +1,12 @@
 //import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View} from 'react-native';
+import images from './app/config/images';
 
-import InputPlaygroudScreen from './app/screens/InputPlaygroud.Screen';
-import LoginScreen from './app/screens/Login.Screen';
+
+import ListingDetailsScreen from './app/screens/ListingDetails.Screen';
+import ListingEditScreen from './app/screens/ListingEdit.Screen';
+import MessagesScreen from './app/screens/Messages.Screen';
 //import "react-native-gesture-handler"
 
 
@@ -11,7 +14,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <LoginScreen/>
+        <ListingEditScreen/>
     </View>
   );
 }
