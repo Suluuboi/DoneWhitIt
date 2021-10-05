@@ -6,6 +6,7 @@ import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import CategoryPickerItem from '../components/form/CategoryPickerItem'
 import { AppFormFieldFormik, AppFormFormik, AppSubmitButtonFormik } from '../components/form/formik'
 import AppPickerFormik from '../components/form/formik/AppPicker.Formik'
+import ImagePicker from '../components/image/ImagePicker'
 import colors from '../config/colors'
 import defaultStyles from '../config/default.styles'
 import images from '../config/images'
@@ -34,6 +35,7 @@ export default function ListingEditScreen() {
 
     return (
         <CustomSafeAreaView style={styles.container}>
+            <ImagePicker/>
             <AppFormFormik
                 initialValues={{
                     title: '',

@@ -19,7 +19,9 @@
     "react-native-gesture-handler": "~1.10.2",
     "react-native-paper": "^4.9.2",
     "react-native-web": "~0.13.12",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "expo-image-picker": "~10.2.2",
+    "expo-permissions": "~12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
