@@ -1,27 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Image, StyleSheet, Text, View } from 'react-native'
 import * as ExpoImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions'
-
-
-import CustomSafeAreaView from '../CustomSafeAreaView'
 import AppButton from '../AppButton';
-import Icon from '../Icon';
-import ListItem from '../ListItem';
 
 export default function ImagePicker() {
 
-    const [uri, setUri] = useState<string| undefined>()
-
-    async function requestPermission() {
-        const {granted} = await ExpoImagePicker.requestMediaLibraryPermissionsAsync()
-        //const {} = await Permissions.askAsync(Permissions.MEDIA_LIBRARY, Permissions.LOCATION_FOREGROUND)
-        
-        if(!granted){
-            alert('you need to enablle camera permissins')
-        }
-    
-    }
+    const [uri, setUri] = useState<string>()
 
     async function selectImage(){
         try {
@@ -32,10 +16,6 @@ export default function ImagePicker() {
         }
         
     }
-
-    useEffect(() => {
-       requestPermission();
-    }, [])
 
     return (
         <View style={styles.container}>
