@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as Yup from 'yup'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import CategoryPickerItem from '../components/form/CategoryPickerItem'
 import { AppFormFieldFormik, AppFormFormik, AppSubmitButtonFormik } from '../components/form/formik'
+import AppImagePickerFormik from '../components/form/formik/AppImagePicker.Formik'
 import AppPickerFormik from '../components/form/formik/AppPicker.Formik'
 import ImagePicker from '../components/image/ImagePicker'
 import colors from '../config/colors'
@@ -14,6 +15,7 @@ import images from '../config/images'
 import { Selection } from './InputPlaygroud.Screen'
 
 const validationSchema = Yup.object().shape({
+    images: Yup.array().min(1,'Please select at least one image.'),
     title: Yup.string().required().min(4).label("Title"),
     price: Yup.number().required().min(1).max(10000).label('Price'),
     description: Yup.string().required().min(30).label('Description'),
@@ -35,46 +37,53 @@ export default function ListingEditScreen() {
 
     return (
         <CustomSafeAreaView style={styles.container}>
-            <ImagePicker/>
-            <AppFormFormik
-                initialValues={{
-                    title: '',
-                    price: '',
-                    description: '',
-                    category:''
-                }}
-                onSubmit={(value)=>setResult(value)}
-                validationSchema={validationSchema}
-            >
-                <AppFormFieldFormik  
-                    maxLength={255} 
-                    context_field_name={'title'} 
-                    placeholder={'Title'}
-                    autoCapitalize={'sentences'}
-                />
-                <AppFormFieldFormik
-                    icon_name={'cash'}
-                    maxLength={8}
-                    context_field_name={'price'}
-                    placeholder={'Price'}
-                    keyboardType="numeric"
-                    width={'40%'}
-                />
-                <AppPickerFormik
-                    items={categories}
-                    name={'category'}
-                    placeholder={'Category'}
-                    width={'40%'}
-                    //PickerItemComponent={CategoryPickerItem}
-                />
-                <AppFormFieldFormik
-                    placeholder={'Description'}
-                    context_field_name={'description'}
-                    numberOfLines={3}
-                />
-                <AppSubmitButtonFormik label={'Post'}/>
-                <Text>{JSON.stringify(result, null,"\t")}</Text>
-            </AppFormFormik>
+           
+            <ScrollView>
+
+                <AppFormFormik
+                    initialValues={{
+                        title: '',
+                        price: '',
+                        description: '',
+                        category:'',
+                        images:[]
+                    }}
+                    onSubmit={(value)=>setResult(value)}
+                    validationSchema={validationSchema}
+                >
+                    <AppImagePickerFormik name='images'/>
+                    <AppFormFieldFormik  
+                        maxLength={255} 
+                        context_field_name={'title'} 
+                        placeholder={'Title'}
+                        autoCapitalize={'sentences'}
+                    />
+                    <AppFormFieldFormik
+                        icon_name={'cash'}
+                        maxLength={8}
+                        context_field_name={'price'}
+                        placeholder={'Price'}
+                        keyboardType="numeric"
+                        width={'40%'}
+                    />
+                    <AppPickerFormik
+                        items={categories}
+                        name={'category'}
+                        placeholder={'Category'}
+                        width={'40%'}
+                        //PickerItemComponent={CategoryPickerItem}
+                    />
+                    <AppFormFieldFormik
+                        placeholder={'Description'}
+                        context_field_name={'description'}
+                        numberOfLines={3}
+                    />
+                    <AppSubmitButtonFormik label={'Post'}/>
+                    <Text>{JSON.stringify(result, null,"\t")}</Text>
+                </AppFormFormik>
+
+            </ScrollView>
+
         </CustomSafeAreaView>
     )
 }

@@ -1,8 +1,10 @@
 //import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View} from 'react-native';
+import ImagePicker from './app/components/image/ImagePicker';
+import GetMyLocation from './app/components/location/GetMyLocation';
+import ListingEditScreen from './app/screens/ListingEdit.Screen';
 
-import ImageFlatList from './app/components/image/ImageFlatList';
 
 
 
@@ -12,7 +14,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <ImageFlatList/>
+        <GetMyLocation/>
     </View>
   );
 }

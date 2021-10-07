@@ -9,17 +9,33 @@ import colors from '../../config/colors'
 /**select and remove image */
 
 type ImageInputProps = {
-    addNextComonent: (image_info: ImageInfo) => void//add the next comonent
-    removeComponent: (image_uri: ImageInfo) => void
-    changeComponent: (image_uri: ImageInfo)=>void
-    item: ImageInfo
+    addNextComonent: (image_info: ImageListInfo) => void//add the next comonent
+    removeComponent: (image_uri: ImageListInfo) => void
+    changeComponent: (image_uri: ImageListInfo)=>void
+    item: ImageListInfo
 }
 
 export default function ImageInput({addNextComonent, removeComponent, changeComponent, item}: ImageInputProps) {
 
     const [image_uri,setImageUri] = useState<undefined| string>()
 
-    function add(info: ImageInfo){
+    async function requestPermission() {
+        let permissionResult = await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+        alert("Permission to access camera roll is required!");
+        return;
+        }
+        //let pickerResult = await ExpoImagePicker.launchImageLibraryAsync();
+        //console.log(pickerResult);
+        return
+    }
+
+    useEffect(() => {
+        requestPermission();
+    }, []);
+
+    function add(info: ImageListInfo){
         addNextComonent(info)
     }
     
@@ -33,10 +49,16 @@ export default function ImageInput({addNextComonent, removeComponent, changeComp
         setImageUri(undefined)
     }
 
+    async function openImageLibrary(){
+        return await ExpoImagePicker.launchImageLibraryAsync({
+            mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
+            //quality: 0.5
+        })
+    }
 
     async function selectImage(){
         try {
-            const res = await ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
+            const res = await openImageLibrary()//ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
             if(!res.cancelled){
                 setImageUri(res.uri) 
                 add({key:0, uri: res.uri})
@@ -52,7 +74,7 @@ export default function ImageInput({addNextComonent, removeComponent, changeComp
     async function changeImage() {
         
         try {
-            const res = await ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
+            const res = await openImageLibrary()//ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
             if(!res.cancelled){
                 setImageUri(image_uri) 
                 change(res.uri)
