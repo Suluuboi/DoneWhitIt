@@ -7,6 +7,7 @@ import AppTextInput from '../AppTextInput'
 import ErrorMessage from '../ErrorMessage'
 import AppText from '../../AppText'
 import { string } from 'yup/lib/locale'
+import { MaterialCommunityIconsSet } from '../../icon/types'
 
 /**
  * NB!!! this component needs to be inserted into a formik component
@@ -17,7 +18,7 @@ type AppFormFieldProps={
     //context: FormikContextType<any>//the info that will be sent from formik
     placeholder?: string;
     //possible options for App text that dont include any formic data
-    icon_name   ?: any,
+    icon_name   ?: MaterialCommunityIconsSet,
     onChangeText?: (text: string)=>void
     autoCorrect?: boolean
     autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined
@@ -29,9 +30,10 @@ type AppFormFieldProps={
     maxLength?: number
     numberOfLines?: number
     width?:number | string | undefined
+    multiline?: boolean | undefined
 }
 
-export default function AppFormFieldFormik({context_field_name, placeholder, autoCapitalize, autoCorrect, keyboardType, textContentType, secureTextEntry, icon_name, autoFocus, maxLength, numberOfLines, width='100%'}:AppFormFieldProps) { 
+export default function AppFormFieldFormik({context_field_name, placeholder, autoCapitalize, autoCorrect, keyboardType, textContentType, secureTextEntry, icon_name, autoFocus, maxLength, numberOfLines, width='100%', multiline=undefined}:AppFormFieldProps) { 
 
 
     const {setFieldTouched, handleChange, errors, touched} = useFormikContext<any>()//context
@@ -45,7 +47,7 @@ export default function AppFormFieldFormik({context_field_name, placeholder, aut
                 placeholder={placeholder} 
                 autoCapitalize={autoCapitalize ? autoCapitalize: "none"}
                 autoCorrect={autoCorrect? autoCorrect: true}
-                keyboardType={keyboardType ? keyboardType : "email-address"}
+                keyboardType={keyboardType ? keyboardType : "default"}
                 textContentType={textContentType ? textContentType : "emailAddress"}
                 secureTextEntry={secureTextEntry}
                 icon_name={icon_name}
@@ -53,6 +55,7 @@ export default function AppFormFieldFormik({context_field_name, placeholder, aut
                 maxLength={maxLength ? maxLength : undefined}
                 numberOfLines={numberOfLines ? numberOfLines : undefined}
                 width={width}
+                multiline={multiline}
             />
 
             {/** Error Message*/}

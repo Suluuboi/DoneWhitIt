@@ -1,42 +1,50 @@
+import { useNavigation } from '@react-navigation/core'
 import React, { Component } from 'react'
 import { ImageBackground, StyleSheet, Text, Image ,View } from 'react-native'
 import AppButton from '../components/AppButton'
-import colors from '../config/colors'
+import colors from '../config/colors';
+import images from '../config/images';
+import { AuthNavigationPages, AuthNavigationProps } from '../navigation/auth-navigation/types';
 
-export default class WelcomScreen extends Component {
-    render() {
-        return (
-            <ImageBackground 
-                style={styles.background} 
-                source={require("../assets/images/background.jpg")}
-                blurRadius={2}
-            >
+type WelcomScreenProps = {
+    navigation: AuthNavigationProps<AuthNavigationPages.Welcome>
+}
 
-                <View style={styles.logo_container}>
-                    <Image 
-                        style={styles.image} 
-                        source={require("../assets/images/logo-red.png")}>
-                    </Image>
+export default function WelcomScreen({navigation}: WelcomScreenProps) {
 
-                    <Text style={styles.tagline}>Sell what you dont need.</Text>
 
-                </View>
+    return (
+        <ImageBackground 
+            style={styles.background} 
+            source={require("../assets/images/background.jpg")}
+            blurRadius={2}
+        >
 
-                <View style={styles.buttons_container}>
-                    <AppButton  
-                        text={"Login"} 
-                        onPress={()=>console.log("Login button pressed")} 
-                    />
-                    <AppButton 
-                        text={"Register"} 
-                        button_color={colors.secondary} 
-                        onPress={()=>console.log("Register Button Pressed")} 
-                    />
-                </View>
+            <View style={styles.logo_container}>
+                <Image 
+                    style={styles.image} 
+                    source={images.logo}>
+                </Image>
+
+                <Text style={styles.tagline}>Sell what you dont need.</Text>
+
+            </View>
+
+            <View style={styles.buttons_container}>
+                <AppButton  
+                    text={"Login"} 
+                    onPress={()=>navigation.navigate(AuthNavigationPages.Login)} 
+                />
+                <AppButton 
+                    text={"Register"} 
+                    button_color={colors.secondary} 
+                    onPress={()=>navigation.navigate(AuthNavigationPages.Register)} 
+                />
+            </View>
                 
-            </ImageBackground>
-        )
-    }
+        </ImageBackground>
+    )
+    
 }
 
 

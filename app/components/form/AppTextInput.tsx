@@ -23,9 +23,10 @@ type AppTextInputProps={
     maxLength?: number,
     numberOfLines?: number,
     width?: number | string | undefined//the width of the text
+    multiline?: boolean | undefined
 }
 
-export default function AppTextInput({icon_name,placeholder, onChangeText ,autoCorrect, keyboardType,autoCapitalize, textContentType, secureTextEntry, onBlur, autoFocus=false, maxLength, numberOfLines, width='100%'}:AppTextInputProps) {
+export default function AppTextInput({icon_name,placeholder, onChangeText ,autoCorrect, keyboardType,autoCapitalize, textContentType, secureTextEntry, onBlur, autoFocus=false, maxLength, numberOfLines,multiline=false, width='100%'}:AppTextInputProps) {
     return (
         <View style={[styles.container,{width: width}]}> 
             {icon_name &&   <MaterialCommunityIcons 
@@ -41,7 +42,7 @@ export default function AppTextInput({icon_name,placeholder, onChangeText ,autoC
                     placeholder={placeholder} 
                     autoCapitalize={autoCapitalize ? autoCapitalize: "none"}
                     autoCorrect={autoCorrect? autoCorrect: true}
-                    keyboardType={keyboardType ? keyboardType : "email-address"}
+                    keyboardType={keyboardType ? keyboardType : "default"}
                     onChangeText={(text)=>onChangeText ? onChangeText(text): undefined}
                     textContentType={textContentType ? textContentType : "emailAddress"}
                     secureTextEntry={secureTextEntry ? secureTextEntry: false}
@@ -49,7 +50,7 @@ export default function AppTextInput({icon_name,placeholder, onChangeText ,autoC
                     maxLength={maxLength? maxLength :undefined}
                     numberOfLines={numberOfLines ? numberOfLines :undefined}
                     autoFocus={autoFocus}
-                    multiline
+                    multiline={multiline}
                 />
             </View>
 

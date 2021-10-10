@@ -1,28 +1,18 @@
-import React, { useState } from 'react'
-import { Image, StyleSheet, TextInput} from 'react-native';
+import React,{useState} from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import * as Yup from 'yup' 
-
 import CustomSafeAreaView from '../components/CustomSafeAreaView';
+import { AppFormFieldFormik, AppFormFormik, AppSubmitButtonFormik } from '../components/form/formik';
 import images from '../config/images';
-import {
-    AppFormFieldFormik, 
-    AppSubmitButtonFormik, 
-    AppFormFormik
-} from '../components/form/formik'
 
 const validation_schema = Yup.object().shape({
+    name: Yup.string().required().min(4).label('Name'),
     email: Yup.string().required().email().label("Email"),
     password: Yup.string().required().min(4).label("Password")
 });
 
-export default function LoginScreen() {
+function RegisterScreen(){
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    function login(){
-        console.log({email: email, password: password})
-    }
 
     return (
         <CustomSafeAreaView style={styles.container}>
@@ -32,17 +22,23 @@ export default function LoginScreen() {
             />
                 
             <AppFormFormik
-                initialValues={{email:'', password:''}}
+                initialValues={{name:'',email:'', password:''}}
                 onSubmit={values=>console.log(values)}
                 validationSchema={validation_schema}
             >
+                <AppFormFieldFormik
+                    icon_name={"contacts"}
+                    context_field_name={'name'} //same name as the from the validation fields
+                    placeholder={'Name'}
+                    autoFocus
+                    multiline
+                />
                         
                 <AppFormFieldFormik
                     icon_name={"email"}
                     context_field_name={'email'} //same name as the from the validation fields
                     placeholder={'Email'}
                     keyboardType={'email-address'}
-                    autoFocus
                     multiline
                 />
                 <AppFormFieldFormik
@@ -53,13 +49,15 @@ export default function LoginScreen() {
                     secureTextEntry={true}
                 />
 
-                <AppSubmitButtonFormik label={'Login'} />
+                <AppSubmitButtonFormik label={'Register'} />
             </AppFormFormik>
 
             
         </CustomSafeAreaView>
     )
-}
+};
+
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     container:{
@@ -72,4 +70,4 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginBottom: 20
     }
-})
+});
