@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 
 import Card from '../components/Card';
@@ -6,57 +6,65 @@ import CustomSafeAreaView from '../components/CustomSafeAreaView';
 import colors from '../config/colors';
 import images from '../config/images';
 import { FeedNavigationPages, ListingsSceenProps } from '../navigation/feed-navigation/types';
+import listingsApi from '../api/listings/listings-api';
+import { Listings } from '../api/listings/types';
 
-type Listing = {
-    name    : string,
-    price   : string,
-    image   : any
-}
-
-const listingItems = [
-    {
-        name: "Shirt",
-        price: "N$ 100",
-        image: images.chair
-    },
-    {
-        name: "Air Force One",
-        price: "N$ 750",
-        image: images.logo
-    },
-    {
-        name: "Covid Musk",
-        price: "N$ 10",
-        image: images.wear_mask
-    },
-    {
-        name: "Sick",
-        price: "N$ 40",
-        image: images.sick_sneezing
+const a = {
+    "id":201,
+    "title":"Red jacket",
+    "images":
+    [
+        {  
+            "url":"http://172.16.48.188:9000/assets/jacket1_full.jpg",
+            "thumbnailUrl":"http://172.16.48.188:9000/assets/jacket1_thumb.jpg"
+        }
+    ],
+    "price":100,
+    "categoryId":5,
+    "userId":1,
+    "location":{
+        "latitude":37.78825,
+        "longitude":-122.4324
     }
-] as Listing[]
+}
+    
+
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
+
+    const [listings, setListings] = useState<Listings[] | []>([])
+
+    async function loadListings(){
+        const res = await listingsApi.getListings();
+        console.log(res.data)
+        const listings = res.data as Listings[]
+        setListings(listings)
+    }
+
+    useEffect(()=>{
+        loadListings()
+    },[])
 
     return (
         <CustomSafeAreaView style={styles.container}>
             <FlatList
-                data={listingItems}
-                keyExtractor={(item)=>item.name}
+                data={listings}
+                keyExtractor={(item)=>item.id.toString()}
                 renderItem={({item})=>
                     <Card 
-                        image={item.image}
-                        title={item.name}
-                        sub_title={item.price}    
+                        imageUrl={item.images[0].url}
+                        title={item.title}
+                        sub_title={item.price.toString()}    
                         onPress={()=>
-                                navigation.navigate(FeedNavigationPages.ListingsDetails, 
+                                /*navigation.navigate(FeedNavigationPages.ListingsDetails, 
                                     {
                                         image: item.image, 
                                         description: item.price, 
                                         price: item.price, 
                                         title: item.name
                                     }
-                            )
+                            )*/
+                            console.log('List')
                         }
                     />
                 }
