@@ -71,12 +71,13 @@ export default function ListingEditScreen() {
                         name={'category'}
                         placeholder={'Category'}
                         width={'40%'}
-                        //PickerItemComponent={CategoryPickerItem}
+                        PickerItemComponent={CategoryPickerItem}
                     />
                     <AppFormFieldFormik
                         placeholder={'Description'}
                         context_field_name={'description'}
                         numberOfLines={3}
+                        multiline
                     />
                     <AppSubmitButtonFormik label={'Post'}/>
                     <Text>{JSON.stringify(result, null,"\t")}</Text>

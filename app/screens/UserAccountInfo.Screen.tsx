@@ -3,21 +3,24 @@ import { FlatList, StyleSheet, Text, View } from 'react-native'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import Icon from '../components/Icon'
+import { MaterialCommunityIconsSet } from '../components/icon/types'
 import ListItem from '../components/ListItem'
 import ListItemSeparater from '../components/ListItemSeparater'
 import colors from '../config/colors'
 import images from '../config/images'
+import { AccountNavigationPages, AccountSceenProps } from '../navigation/account-navigation/types'
 
 export type MenueItem = {
     key:string,
     title: string,
     icon:{
-        name: string,
+        name: MaterialCommunityIconsSet,
         backgroundColor: string
-    }
+    },
+    taragetScreen?: AccountNavigationPages
 }
 
-export default function UserAccountInfoScreen() {
+export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
 
     const menuItems = [
         {   
@@ -34,7 +37,8 @@ export default function UserAccountInfoScreen() {
             icon:{
                 name: 'email',
                 backgroundColor: colors.secondary
-            }
+            },
+            taragetScreen: 'Messages'
         }
     ] as MenueItem[]
 
@@ -58,6 +62,7 @@ export default function UserAccountInfoScreen() {
                                 name={item.icon.name}
                                 background_color={item.icon.backgroundColor}
                             />}
+                            onPress={()=>item.taragetScreen ? navigation.navigate(item.taragetScreen) : null}
                         />
                         
                     }

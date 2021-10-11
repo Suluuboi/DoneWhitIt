@@ -5,6 +5,7 @@ import Card from '../components/Card';
 import CustomSafeAreaView from '../components/CustomSafeAreaView';
 import colors from '../config/colors';
 import images from '../config/images';
+import { FeedNavigationPages, ListingsSceenProps } from '../navigation/feed-navigation/types';
 
 type Listing = {
     name    : string,
@@ -35,7 +36,8 @@ const listingItems = [
     }
 ] as Listing[]
 
-function ListingsScreen() {
+function ListingsScreen({navigation, route}: ListingsSceenProps) {
+
     return (
         <CustomSafeAreaView style={styles.container}>
             <FlatList
@@ -46,6 +48,16 @@ function ListingsScreen() {
                         image={item.image}
                         title={item.name}
                         sub_title={item.price}    
+                        onPress={()=>
+                                navigation.navigate(FeedNavigationPages.ListingsDetails, 
+                                    {
+                                        image: item.image, 
+                                        description: item.price, 
+                                        price: item.price, 
+                                        title: item.name
+                                    }
+                            )
+                        }
                     />
                 }
                 showsVerticalScrollIndicator={false}
