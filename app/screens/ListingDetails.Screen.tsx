@@ -10,11 +10,11 @@ import { FeedNavigationPages, FeedNavigationParams, ListingsDetailsSceenProps } 
 
 const ListingDetailsScreen = ({route}:ListingsDetailsSceenProps) => {
     
-    const {image, title, description, price} = route.params
+    const {image_url, title, description, price} = route.params
     
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={image} ></Image>
+            <Image style={styles.image} source={{uri : image_url}} ></Image>
             <View style={styles.details_container}>
                 <AppText style={styles.title} text={title}/>
                 <AppText style={styles.price} text={price}/>
