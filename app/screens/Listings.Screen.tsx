@@ -10,23 +10,12 @@ import listingsApi from '../api/listings/listings-api';
 import { Listings } from '../api/listings/types';
 import AppText from '../components/AppText';
 import AppButton from '../components/AppButton';
+import LoadingActivity from '../components/LoadingActivity';
+import useApi from '../hooks/useApi';
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
-    const [listings, setListings] = useState<Listings[] | []>([]);
-    const [error, setError] = useState<boolean>()
-    const [loading, setLoading] = useState<boolean>()
-
-    async function loadListings(){
-        setLoading(true)
-        const res = await listingsApi.getListings();
-        setLoading(false)
-
-        if(!res.ok) return setError(true)
-
-        setError(false)    
-        setListings(res.data as Listings[])
-    }
+    const {data: listings, error, loading, request: loadListings} = useApi(listingsApi.getListings())
 
     useEffect(()=>{
         loadListings()
@@ -43,7 +32,8 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 </>
             
             }
-            <ActivityIndicator animating={loading} size={'large'} color={colors.primary}/>
+            {/*<ActivityIndicator animating={loading} size={'large'} color={colors.primary}/>*/}
+            <LoadingActivity visable={loading}/>
             
             {
             !loading &&

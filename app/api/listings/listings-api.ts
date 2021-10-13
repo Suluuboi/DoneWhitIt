@@ -9,6 +9,10 @@ function getListings(){
     })
 }
 
+function addListing( ){
+
+}
+
 export default {
     getListings
 }
