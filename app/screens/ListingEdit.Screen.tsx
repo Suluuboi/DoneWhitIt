@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as Yup from 'yup'
+import listingsApi from '../api/listings/listings-api'
+import { Listings } from '../api/listings/types'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import CategoryPickerItem from '../components/form/CategoryPickerItem'
@@ -11,6 +13,7 @@ import ImagePicker from '../components/image/ImagePicker'
 import colors from '../config/colors'
 import defaultStyles from '../config/default.styles'
 import images from '../config/images'
+import useLocation from '../hooks/useLocation'
 
 import { Selection } from './InputPlaygroud.Screen'
 
@@ -34,6 +37,16 @@ const categories : Selection[] = [
 export default function ListingEditScreen() {
 
     const [result, setResult] = useState()
+    const location = useLocation()
+
+    async function handleSubmit(listing: Listings){
+        const result = await listingsApi.addListing(location ? {...listing, location}: listing);
+        if(!result.ok)
+        console.log(result)
+            return alert('Could not save the listing.')
+        alert('Success')
+        
+    }
 
     return (
         <CustomSafeAreaView style={styles.container}>
@@ -48,7 +61,7 @@ export default function ListingEditScreen() {
                         category:'',
                         images:[]
                     }}
-                    onSubmit={(value)=>setResult(value)}
+                    onSubmit={(value)=>handleSubmit(value)}
                     validationSchema={validationSchema}
                 >
                     <AppImagePickerFormik name='images'/>

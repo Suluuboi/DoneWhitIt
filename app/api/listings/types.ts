@@ -11,6 +11,7 @@ export type location = {
 export type Listings = {
     id          :   number,
     title       :   string,
+    description :   string, 
     images      :   ImageInfo[],
     price       :   number,
     categoryId  :   number,
