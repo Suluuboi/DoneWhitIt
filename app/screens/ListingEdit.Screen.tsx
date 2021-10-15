@@ -16,6 +16,7 @@ import images from '../config/images'
 import useLocation from '../hooks/useLocation'
 
 import { Selection } from './InputPlaygroud.Screen'
+import UploadScreen from './Upload.Screen'
 
 const validationSchema = Yup.object().shape({
     images: Yup.array().min(1,'Please select at least one image.'),
@@ -37,19 +38,27 @@ const categories : Selection[] = [
 export default function ListingEditScreen() {
 
     const [result, setResult] = useState()
+    const [uploadVisable, setUploadVisable] = useState(false)
+    const [progress, setProgress] = useState(0)
     const location = useLocation()
 
     async function handleSubmit(listing: Listings){
-        const result = await listingsApi.addListing(location ? {...listing, location}: listing);
-        if(!result.ok)
-        console.log(result)
-            return alert('Could not save the listing.')
+        setUploadVisable(true)
+        const result = await listingsApi.addListing(location ? {...listing, location}: listing,
+                (progress : any)=> setProgress(progress) 
+            );
+        setUploadVisable(false)
+
+
+        if(!result.ok) return alert('Could not save the listing.')
         alert('Success')
         
     }
 
     return (
         <CustomSafeAreaView style={styles.container}>
+
+            <UploadScreen progress={progress}  visable={uploadVisable}/>
            
             <ScrollView>
 

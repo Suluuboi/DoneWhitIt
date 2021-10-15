@@ -38,11 +38,11 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             {
             !loading &&
             <FlatList
-                data={listings}
+                data={listings as Listings[]}
                 keyExtractor={(item)=>item.id.toString()}
                 renderItem={({item})=>
                     <Card 
-                        imageUrl={item.images[0].url}
+                        imageUrl={item.images[0]?.url}
                         title={item.title}
                         sub_title={item.price.toString()}    
                         onPress={()=>
