@@ -43,22 +43,25 @@ export default function ListingEditScreen() {
     const location = useLocation()
 
     async function handleSubmit(listing: Listings){
+        setProgress(0)
         setUploadVisable(true)
         const result = await listingsApi.addListing(location ? {...listing, location}: listing,
                 (progress : any)=> setProgress(progress) 
             );
-        setUploadVisable(false)
+        
 
 
-        if(!result.ok) return alert('Could not save the listing.')
-        alert('Success')
+        if(!result.ok) {
+            setUploadVisable(false)
+            return alert('Could not save the listing.')
+        }
         
     }
 
     return (
         <CustomSafeAreaView style={styles.container}>
 
-            <UploadScreen progress={progress}  visable={uploadVisable}/>
+            <UploadScreen progress={progress}  visable={uploadVisable} onDone={()=>setUploadVisable(false)}/>
            
             <ScrollView>
 
