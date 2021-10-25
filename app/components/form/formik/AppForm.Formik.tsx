@@ -1,4 +1,4 @@
-import { Formik } from 'formik'
+import { Formik, FormikHelpers } from 'formik'
 import React from 'react'
 import { StyleSheet} from 'react-native'
 
@@ -6,7 +6,7 @@ import { StyleSheet} from 'react-native'
 
 type AppFormProps={
     initialValues: Object,
-    onSubmit: (valu: any)=>any
+    onSubmit: (value: any, formikHelpers: FormikHelpers<any>)=>any
     validationSchema: any
     children: React.ReactNode
 }

@@ -24,9 +24,15 @@ type AppTextInputProps={
     numberOfLines?: number,
     width?: number | string | undefined//the width of the text
     multiline?: boolean | undefined
+    value: string | undefined
 }
 
-export default function AppTextInput({icon_name,placeholder, onChangeText ,autoCorrect, keyboardType,autoCapitalize, textContentType, secureTextEntry, onBlur, autoFocus=false, maxLength, numberOfLines,multiline=false, width='100%'}:AppTextInputProps) {
+export default function AppTextInput({  icon_name,placeholder, onChangeText ,
+                                        autoCorrect, keyboardType,autoCapitalize, 
+                                        textContentType, secureTextEntry, onBlur, 
+                                        autoFocus=false, maxLength, numberOfLines,
+                                        value,
+                                        multiline=false, width='100%'}:AppTextInputProps) {
     return (
         <View style={[styles.container,{width: width}]}> 
             {icon_name &&   <MaterialCommunityIcons 
@@ -39,7 +45,8 @@ export default function AppTextInput({icon_name,placeholder, onChangeText ,autoC
                 <TextInput  
                     placeholderTextColor={defaultStyles.colors.medium_grey}
                     style={[defaultStyles.text]} 
-                    placeholder={placeholder} 
+                    placeholder={placeholder}
+                    value={value} 
                     autoCapitalize={autoCapitalize ? autoCapitalize: "none"}
                     autoCorrect={autoCorrect? autoCorrect: true}
                     keyboardType={keyboardType ? keyboardType : "default"}

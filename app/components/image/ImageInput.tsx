@@ -1,137 +1,92 @@
 import React,{useState, useEffect} from 'react'
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 
 import * as ExpoImagePicker from 'expo-image-picker'
 import Icon from '../Icon'
 import defaultStyles from '../../config/default.styles'
 import colors from '../../config/colors'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 /**select and remove image */
 
 type ImageInputProps = {
-    addNextComonent: (image_info: ImageListInfo) => void//add the next comonent
-    removeComponent: (image_uri: ImageListInfo) => void
-    changeComponent: (image_uri: ImageListInfo)=>void
-    item: ImageListInfo
+    imageUri?: string, 
+    onChangeImage: (image_url: any)=>void
+    size?: number
 }
 
-export default function ImageInput({addNextComonent, removeComponent, changeComponent, item}: ImageInputProps) {
+export default function ImageInput({imageUri, onChangeImage, size = 150}: ImageInputProps) {
 
-    const [image_uri,setImageUri] = useState<undefined| string>()
+    const [didMount, setDidMount] = useState(false);
 
-    async function requestPermission() {
-        let permissionResult = await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
-
-        if (permissionResult.granted === false) {
-        alert("Permission to access camera roll is required!");
-        return;
-        }
-        //let pickerResult = await ExpoImagePicker.launchImageLibraryAsync();
-        //console.log(pickerResult);
-        return
-    }
+    async function requestPermission(){
+        const { granted } = await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!granted)
+        alert("You need to enable permission go to setting and enable it");
+    };
 
     useEffect(() => {
         requestPermission();
+
+        setDidMount(true);
+        return () => setDidMount(false);
     }, []);
 
-    function add(info: ImageListInfo){
-        addNextComonent(info)
-    }
-    
-    function change(image_uri: string){
-        changeComponent({key:item.key, uri:image_uri})
-        setImageUri(image_uri)
-    }
-    
-    function removeImageComponent(){   
-        removeComponent(item) //: setImageUri(undefined)
-        setImageUri(undefined)
+    if (!didMount) {
+        return null;
     }
 
-    async function openImageLibrary(){
-        return await ExpoImagePicker.launchImageLibraryAsync({
-            mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
-            //quality: 0.5
-        })
-    }
+    function handlePress(){
+        if (!imageUri) selectImage();
+        else
+        Alert.alert("Delete", "Are you sure you want delete this image", [
+            { text: "Yes", onPress: () => onChangeImage(null) },
+            { text: "No" },
+        ]);
+    };
 
     async function selectImage(){
         try {
-            const res = await openImageLibrary()//ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
-            if(!res.cancelled){
-                setImageUri(res.uri) 
-                add({key:0, uri: res.uri})
-            }else{
-                console.log('cancell image')
-            }
+        const result = await ExpoImagePicker.launchImageLibraryAsync({
+            mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
+            quality: 0.5,
+            base64: true,
+        });
+        if (!result.cancelled) onChangeImage(result);
         } catch (error) {
-            console.log('error reading an image')
+        console.log("Error reading image", error);
         }
-    
-    }
-
-    async function changeImage() {
-        
-        try {
-            const res = await openImageLibrary()//ExpoImagePicker.launchImageLibraryAsync({quality: 0.5})
-            if(!res.cancelled){
-                setImageUri(image_uri) 
-                change(res.uri)
-            }else{
-                console.log('cancell image')
-            }
-        } catch (error) {
-            console.log('error reading an image')
-        }
-    }
-  
-    async function changeImageAlert() {
-        Alert.alert(
-            "Change Image?",
-            "WHat do you want to do with the selected image?",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel"),
-                style: "cancel"
-              },
-              { text: "Remove", onPress: () => removeImageComponent() },
-              { text: "Change", onPress: () => changeImage() }
-            ]
-          );
-    }
+    };
 
     return (
-        <TouchableOpacity style={styles.container} onPress={!image_uri ? selectImage : changeImageAlert}>
-
-            {   
-                image_uri ? <Image style={styles.image} source={{uri: image_uri}} /> : //show image if tis availible
-                
-                <View style={styles.icon}> 
-                    <Icon name={'camera'} background_color={colors.medium_grey}/>
-                </View>
-            }
-        </TouchableOpacity>
-    )
+        <TouchableWithoutFeedback onPress={handlePress}>
+            <View style={[styles.container, {width: size, height: size}]}>
+                {!imageUri ? (
+                    <MaterialCommunityIcons
+                        name="camera"
+                        size={40}
+                        color={colors.medium_grey}
+                    />
+                ) : (
+                    <Image source={{ uri: imageUri }} style={styles.image} />
+                )}
+            </View>
+        </TouchableWithoutFeedback>
+    );
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
+        justifyContent: "center",
+        alignItems: "center",
         margin: 2,
-        width: 150,
-        height: 150,
         backgroundColor: defaultStyles.colors.light_grey,
         borderRadius: 20,
         overflow: "hidden"
     },
-    image:{
+    image: {
+        borderRadius: 15,
         width: "100%",
-        height: "100%"
-    },
-    icon:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        height: "100%",
     }
 })

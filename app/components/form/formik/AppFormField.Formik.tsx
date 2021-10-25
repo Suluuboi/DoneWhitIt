@@ -33,16 +33,24 @@ type AppFormFieldProps={
     multiline?: boolean | undefined
 }
 
-export default function AppFormFieldFormik({context_field_name, placeholder, autoCapitalize, autoCorrect, keyboardType, textContentType, secureTextEntry, icon_name, autoFocus, maxLength, numberOfLines, width='100%', multiline=undefined}:AppFormFieldProps) { 
+export default function AppFormFieldFormik({context_field_name, 
+                                            placeholder, autoCapitalize, 
+                                            autoCorrect, keyboardType, textContentType, 
+                                            secureTextEntry, icon_name, autoFocus, 
+                                            maxLength, numberOfLines, width='100%', 
+                                            multiline=undefined}:AppFormFieldProps) { 
 
 
-    const {setFieldTouched, handleChange, errors, touched} = useFormikContext<any>()//context
+    const { setFieldTouched,
+            setFieldValue ,
+            errors, touched, values} = useFormikContext<any>()//context
 
     return (
         <>
             <AppTextInput 
-                onChangeText={handleChange(context_field_name)}    
+                onChangeText={(text)=>setFieldValue(context_field_name, text)}    
                 onBlur={()=>setFieldTouched(context_field_name)}
+                value={values[context_field_name]}
                 //other props that are the same in AppTextInput
                 placeholder={placeholder} 
                 autoCapitalize={autoCapitalize ? autoCapitalize: "none"}

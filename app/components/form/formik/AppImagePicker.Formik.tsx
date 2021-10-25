@@ -3,24 +3,38 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import ImagePicker from '../../image/ImagePicker'
-import ErrorMessage from '../ErrorMessage'
+import ErrorMessage from '../ErrorMessage';
+
+/**A formic component that adds and and removes images */
 
 type AppImagePickerFormikProps = {
-    name: string
+    name: string,
+    maxImages?: number | undefined
 }
 
-export default function AppImagePickerFormik({name}: AppImagePickerFormikProps) {
+export default function AppImagePickerFormik({name, maxImages}: AppImagePickerFormikProps) {
 
-    const { errors,touched ,setFieldValue} = useFormikContext<any>()
+    const { errors, setFieldValue, touched, values } = useFormikContext<any>();
+    const imageUris = values[name]
 
-    function update(uris: ImageURI[]){
-        setFieldValue(name,uris);
-    }
+    function handleAdd(uri: string){
+        setFieldValue(name, [...imageUris, uri]);
+    };
+
+    function handleRemove(uri: string){
+        setFieldValue(
+            name,
+            imageUris.filter((imageUri: string) => imageUri !== uri)
+        );
+    };
 
     return (
         <>
             <ImagePicker 
-                getImageURIs={update}
+                images={values[name]}
+                onAddImage={handleAdd}
+                onRemovedImage={handleRemove}
+                max={maxImages}
             />
             <ErrorMessage error={errors[name] as string} visable={touched[name] as boolean} />
         </ >

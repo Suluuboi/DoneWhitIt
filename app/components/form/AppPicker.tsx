@@ -1,11 +1,13 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { ElementType, useState } from 'react'
-import { Button, FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, FlatList, Modal, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import { number } from 'yup'
+import colors from '../../config/colors'
 import defaultStyles from '../../config/default.styles'
 import { Selection } from '../../screens/InputPlaygroud.Screen'
 import AppText from '../AppText'
 import CustomSafeAreaView from '../CustomSafeAreaView'
+import Icon from '../Icon'
 import PickerItem from '../PickerItem'
 
 /**This creates a slection model */
@@ -13,13 +15,13 @@ import PickerItem from '../PickerItem'
 type AppPickerProps={
     placeholder: string,
     items: Selection[],
-    //selected_item: Selection,
+    selectedItem: Selection,
     onSelectItem:(item:Selection)=>any //what happens when you select an item
     width?: number | undefined | string
     PickerItemComponent?: ElementType<any> | undefined //change the picker List component if specified
 }
 
-export default function AppPicker({ placeholder, items, onSelectItem, width='100%', PickerItemComponent=undefined}: AppPickerProps) {
+export default function AppPicker({ placeholder, items, onSelectItem, width='100%', selectedItem, PickerItemComponent=undefined}: AppPickerProps) {
 
     const [label, setLabel] = useState('')
 
@@ -36,16 +38,33 @@ export default function AppPicker({ placeholder, items, onSelectItem, width='100
             <TouchableWithoutFeedback onPress={()=>setModalVisable(true)}>
 
                 <View style={[styles.container, {width: width}]}> 
-                    {<MaterialCommunityIcons 
+                    {/*<MaterialCommunityIcons 
                         color={defaultStyles.colors.medium_grey}
                         name={'chevron-down'} 
                         size={20}
                                                         style={styles.icon}
-                    />}
-                    {/*placeholder && <AppText style={styles.text} text={label ? label : placeholder}/>*/}
-                    {label ? <AppText style={styles.text} text={label}/> :  <AppText style={styles.placeholder} text={placeholder}/>}
+                    />*/}
+                    {/*label ? <AppText style={styles.text} text={label}/> :  <AppText style={styles.placeholder} text={placeholder}/>*/}
+
+                    <Icon
+                        name="apps"
+                        icon_color={colors.white}
+                        background_color={colors.primary}
+                    />
+                    <TextInput
+                        style={styles.textInput}
+                        defaultValue={selectedItem ? selectedItem.label.toString() : placeholder}
+                        editable={false}
+                    />
+                    <Icon
+                        name="chevron-down"
+                        icon_color={colors.white}
+                        background_color={colors.primary}
+                    />
 
                 </View>
+
+                
 
             </TouchableWithoutFeedback>
 
@@ -73,20 +92,34 @@ export default function AppPicker({ placeholder, items, onSelectItem, width='100
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor: defaultStyles.colors.light_grey,
+        /*backgroundColor: defaultStyles.colors.light_grey,
         borderRadius: 25,
         flexDirection:"row",
         width: "100%",
         padding: 15,
-        marginVertical: 10
+        marginVertical: 10*/
+        backgroundColor: colors.white,
+        borderRadius: 25,
+        flexDirection: "row",
+        //padding: 15,
+        marginVertical: 10,
+        shadowColor: colors.light_grey,
+        shadowOffset: {
+        width: 1,
+        height: 5,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 5,
     },
     icon:{
         marginRight: 10,
         justifyContent: "center",
         alignItems: "center"
     },
-    text:{
-        flex: 1
+    textInput: {
+        fontSize: 18,
+        marginLeft: 10,
+        flex: 1,
     },
     placeholder:{
         color: defaultStyles.colors.medium_grey,

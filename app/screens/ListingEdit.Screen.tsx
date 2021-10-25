@@ -1,3 +1,5 @@
+
+import { FormikHelpers } from 'formik'
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as Yup from 'yup'
@@ -42,7 +44,7 @@ export default function ListingEditScreen() {
     const [progress, setProgress] = useState(0)
     const location = useLocation()
 
-    async function handleSubmit(listing: Listings){
+    async function handleSubmit(listing: Listings, formikHelpers: FormikHelpers<any>){
         setProgress(0)
         setUploadVisable(true)
         const result = await listingsApi.addListing(location ? {...listing, location}: listing,
@@ -55,7 +57,11 @@ export default function ListingEditScreen() {
             setUploadVisable(false)
             return alert('Could not save the listing.')
         }
+
+        console.log('Reset Form Success')
+        formikHelpers.resetForm()
         
+        //setResult(listing as any)
     }
 
     return (
@@ -73,7 +79,7 @@ export default function ListingEditScreen() {
                         category:'',
                         images:[]
                     }}
-                    onSubmit={(value)=>handleSubmit(value)}
+                    onSubmit={(value, formickHelper)=>handleSubmit(value, formickHelper)}
                     validationSchema={validationSchema}
                 >
                     <AppImagePickerFormik name='images'/>
@@ -95,7 +101,7 @@ export default function ListingEditScreen() {
                         items={categories}
                         name={'category'}
                         placeholder={'Category'}
-                        width={'40%'}
+                        width={'60%'}
                         PickerItemComponent={CategoryPickerItem}
                     />
                     <AppFormFieldFormik

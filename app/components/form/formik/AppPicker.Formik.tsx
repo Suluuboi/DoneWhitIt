@@ -30,6 +30,7 @@ export default function AppPickerFormik({placeholder, items,  name, width, Picke
                 placeholder={placeholder}
                 onSelectItem={(selected)=>setFieldValue(name, selected)} 
                 //selected_item={}
+                selectedItem={values[name]}
                 width={width}
                 PickerItemComponent={PickerItemComponent}
             />

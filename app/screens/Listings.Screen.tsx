@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, Button, ActivityIndicator } from 'react-native'
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from '../components/Card';
 import CustomSafeAreaView from '../components/CustomSafeAreaView';
@@ -20,6 +22,16 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
     useEffect(()=>{
         loadListings()
     },[])
+
+    
+
+    const storeData = async (value: any) => {
+        try {
+          await AsyncStorage.setItem('@storage_Key', value)
+        } catch (e) {
+          // saving error
+        }
+      }
 
     return (
         <CustomSafeAreaView style={styles.container}>
