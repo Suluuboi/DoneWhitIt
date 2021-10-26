@@ -1,4 +1,4 @@
 export type CacheItem = {
-    value : any
+    data : any // the data to be saved in the cache
     time_stamp: number
 }

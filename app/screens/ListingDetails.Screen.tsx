@@ -1,23 +1,30 @@
 import { useRoute } from '@react-navigation/core';
 import React from 'react'
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import {  ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'react-native-expo-image-cache';
 
 import AppText from '../components/AppText'
 import ListItem from '../components/ListItem'
 import colors from '../config/colors'
 import images from '../config/images'
-import { FeedNavigationPages, FeedNavigationParams, ListingsDetailsSceenProps } from '../navigation/feed-navigation/types';
+import { ListingsDetailsSceenProps } from '../navigation/feed-navigation/types';
 
 const ListingDetailsScreen = ({route}:ListingsDetailsSceenProps) => {
     
-    const {image_url, title, description, price} = route.params
+    const {image_url, title, description, price, thumbnail_url} = route.params
     
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={{uri : image_url}} ></Image>
+            <Image 
+                style={styles.image} 
+                uri={image_url} 
+                tint='light'
+                preview={{uri : thumbnail_url}}
+            />
             <View style={styles.details_container}>
                 <AppText style={styles.title} text={title}/>
                 <AppText style={styles.price} text={price}/>
+                <AppText style={styles.description} text={description} />
 
                 <View style={styles.user_container}>
                     <ListItem 
@@ -55,6 +62,10 @@ const styles = StyleSheet.create({
     price:{
         color: colors.secondary,
         fontWeight: "bold"
+    },
+    description: {
+        top: 10,
+        color: colors.medium_grey
     },
     user_container:{
         marginVertical: 30

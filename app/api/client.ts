@@ -5,36 +5,22 @@ const apiClient =  create({
     baseURL: 'http://172.16.48.188:9000/api'
 })
 
-const get = apiClient.get;
-/**Redefing the actions of the get function */
+const get = apiClient.get
+/**Edditing the get function */
+/** update the cache with every successfull request, if there is data in the cache display oflinde data */
+apiClient.get = async (url, params, axiosConfig) =>{
+    const response = await get<any>(url, params, axiosConfig)
+    if (response.ok) {
 
-/*apiClient.get = () => {
-    get('')
-}*/
+        cache.store(url, response.data);
 
-//chag the actions that happen when info coms or goes to the server
-apiClient.addResponseTransform(async response => {
-    
-    if(response.ok){
-        //cache.store('data', response.data)
-        //const data = await cache.get('data')
-        //console.log(data)
-        console.log(response)
-
-        if(response.config?.method == 'get'){
-            const url = response.config.url
-            cache.store('data' , response.data)
-        }
-
-        return response
+        return response;
     }
+ 
+    const data = await cache.get(url);
 
-    //if offline
-    const data = await cache.get('data')
-    console.log(data)
-    return data ? {ok: true, data: data} : response
-    
-})
+    return data ? { ok: true, data: data } as any : response;
+}
 
 
 export default apiClient

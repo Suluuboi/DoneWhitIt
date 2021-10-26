@@ -13,7 +13,8 @@ export type FeedNavigationParams={
         title:string,
         price: string,
         description: string,
-        image_url: string
+        image_url: string,
+        thumbnail_url: string
     }
 }
 

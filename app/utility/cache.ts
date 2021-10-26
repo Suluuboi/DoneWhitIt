@@ -1,23 +1,22 @@
 
-/**A utitlity that handels data to saved on the sytems async storage memory */
+/**A utitlity that handels data to saved info on the system cache using async-storage */
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import moment from "moment"
 import { CacheItem } from "./types"
 
-const prefix = 'cache';
+const prefix = 'cache-';
 const expiry_in_minutes = 5
 
-async function store(key: string, item: CacheItem){
+/**Store the data in the cache under the given key   */
+async function store(key: string, data: any){
     try {
-        item= {
-            value: item.value,
+        const item : CacheItem = {
+            data : data,
             time_stamp: Date.now()
         }
 
-        await AsyncStorage.setItem(prefix+ key, JSON.stringify(item))
-        console.log('saved');
-        
+        await AsyncStorage.setItem(prefix + key, JSON.stringify(item))
 
     } catch (error) {
         console.log(error)
@@ -30,6 +29,7 @@ function isExpired(item: CacheItem){
     const now = moment(Date.now())
     const stored_time = moment(item.time_stamp)
     const is_expired = now.diff(stored_time, 'minutes') > expiry_in_minutes
+    
     return is_expired
 }
 
@@ -37,19 +37,20 @@ function isExpired(item: CacheItem){
 async function get(key: string){
     try {
         
-        const value = await AsyncStorage.getItem(prefix + key ) as CacheItem | null
-        const item = JSON.stringify(value)
-
+        const value = await AsyncStorage.getItem(prefix + key ) //as CacheItem | null
+        const item = value && JSON.parse(value) as CacheItem
         if(!item) return null
         
         if(!value) return null
 
-        if(isExpired(value)){
+        if(isExpired(item)){
+            //console.log('has expired')
             await AsyncStorage.removeItem(prefix + key)
             return null
         }
+        
 
-        return value.value
+        return item.data
 
     } catch (error) {
         console.log(error)

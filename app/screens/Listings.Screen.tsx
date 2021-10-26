@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, FlatList, Button, ActivityIndicator } from 'react-native'
-import NetInfo, {useNetInfo} from '@react-native-community/netinfo'
+import React, { useEffect } from 'react'
+import { StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from '../components/Card';
 import CustomSafeAreaView from '../components/CustomSafeAreaView';
 import colors from '../config/colors';
-import images from '../config/images';
 import { FeedNavigationPages, ListingsSceenProps } from '../navigation/feed-navigation/types';
 import listingsApi from '../api/listings/listings-api';
 import { Listings } from '../api/listings/types';
@@ -54,19 +52,22 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 keyExtractor={(item)=>item.id.toString()}
                 renderItem={({item})=>
                     <Card 
-                        imageUrl={item.images[0]?.url}
+                        image_url={item.images[0]?.url}
+                        thumbnail_url={item.images[0].thumbnailUrl}
                         title={item.title}
                         sub_title={item.price.toString()}    
                         onPress={()=>
-                                /*navigation.navigate(FeedNavigationPages.ListingsDetails, 
+                                navigation.navigate(FeedNavigationPages.ListingsDetails, 
                                     {
-                                        image: item.image, 
-                                        description: item.price, 
-                                        price: item.price, 
-                                        title: item.name
+                                        image_url: item.images[0].url, 
+                                        description: item.description, 
+                                        price: item.price.toString(), 
+                                        title: item.title,
+                                        thumbnail_url: item.images[0].thumbnailUrl
+                                        
                                     }
-                            )*/
-                            console.log('List')
+                            )
+                            //console.log('List')
                         }
                     />
                 }

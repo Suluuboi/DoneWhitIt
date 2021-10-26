@@ -1,17 +1,20 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, StyleSheet,  TouchableOpacity } from 'react-native'
+import { Image } from 'react-native-expo-image-cache';
+
 
 import colors from '../config/colors';
 import AppText from './AppText';
 
 type CardProps = {
-    imageUrl    : string,
+    image_url    : string,
+    thumbnail_url: string,
     title       : string,
-    sub_title   : string
+    sub_title   : string,
     onPress?    : ()=>void
 }
 
-export default function Card({imageUrl, title, sub_title, onPress}: CardProps) {
+export default function Card({image_url, title, sub_title, thumbnail_url , onPress}: CardProps) {
     return (
         <TouchableOpacity 
             style={styles.card_container}
@@ -19,9 +22,12 @@ export default function Card({imageUrl, title, sub_title, onPress}: CardProps) {
         >
 
             <Image 
-                resizeMode={"cover"} 
+                //resizeMode={"cover"} 
                 style={styles.image} 
-                source={{uri :imageUrl}} 
+                uri={image_url}
+                preview={{uri : thumbnail_url}} 
+                tint='light'
+                //onProgress={}
             />
 
             <View style={styles.text_container}>
