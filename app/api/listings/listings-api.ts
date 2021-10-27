@@ -5,8 +5,6 @@ const listings = '/listings';
 
 function getListings(){
     return apiClient.get(listings).then((res)=>{
-        ///console.log(res);
-        
         return res
     })
 }

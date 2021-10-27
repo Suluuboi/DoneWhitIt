@@ -8,6 +8,7 @@ import ListItem from '../components/ListItem'
 import ListItemSeparater from '../components/ListItemSeparater'
 import colors from '../config/colors'
 import images from '../config/images'
+import useAuth from '../hooks/useAuth'
 import { AccountNavigationPages, AccountSceenProps } from '../navigation/account-navigation/types'
 
 export type MenueItem = {
@@ -42,12 +43,15 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
         }
     ] as MenueItem[]
 
+    const { user, logOut } = useAuth()
+    
+    
     return (
         <CustomSafeAreaView style={styles.container}>
             <View style={styles.user_info}>
                 <ListItem
-                    title={'Hans Mabngu'}
-                    sub_title={"hansmbangu@gmail.com"}
+                    title={user.name}
+                    sub_title={user.email}
                     image={images.wear_mask} 
                 />
             </View>
@@ -77,6 +81,7 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
                                         name={'logout'}
                                     />
                     }
+                    onPress={()=>logOut()}
                 />
             </View>
         </CustomSafeAreaView>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, TextInput} from 'react-native';
+import { Image, StyleSheet} from 'react-native';
 import * as Yup from 'yup' 
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView';
@@ -13,6 +13,7 @@ import {
 import { LoginInfo } from '../api/authentication/types';
 import authApi from '../api/authentication/auth-api';
 import ErrorMessage from '../components/form/ErrorMessage';
+import useAuth from '../hooks/useAuth';
 
 const validation_schema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),
@@ -20,22 +21,22 @@ const validation_schema = Yup.object().shape({
 });
 
 export default function LoginScreen() {
-    
+    const {logIn} = useAuth()
     const [loginFailed, setLoginFailed] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
     async function login(details: LoginInfo){
-        console.log(details);
+
         const res = await authApi.login(details)
-        console.log(res)
+
         if(!res.ok){
             const err : any = res.data
             setErrorMessage(err.error)
             return setLoginFailed(true);
-        }
+        } 
+
         setLoginFailed(false)
-        console.log(res.data);
-        
+        logIn(res.data as string)
     }
 
     return (

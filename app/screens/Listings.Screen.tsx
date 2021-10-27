@@ -15,21 +15,13 @@ import useApi from '../hooks/useApi';
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
-    const {data: listings, error, loading, request: loadListings} = useApi(listingsApi.getListings())
+    const { data: listings, error, 
+            loading, request: loadListings} = useApi(listingsApi.getListings)
 
     useEffect(()=>{
         loadListings()
     },[])
 
-    
-
-    const storeData = async (value: any) => {
-        try {
-          await AsyncStorage.setItem('@storage_Key', value)
-        } catch (e) {
-          // saving error
-        }
-      }
 
     return (
         <CustomSafeAreaView style={styles.container}>
