@@ -10,18 +10,32 @@ import {
     AppFormFormik
 } from '../components/form/formik'
 
+import { LoginInfo } from '../api/authentication/types';
+import authApi from '../api/authentication/auth-api';
+import ErrorMessage from '../components/form/ErrorMessage';
+
 const validation_schema = Yup.object().shape({
     email: Yup.string().required().email().label("Email"),
     password: Yup.string().required().min(4).label("Password")
 });
 
 export default function LoginScreen() {
+    
+    const [loginFailed, setLoginFailed] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    function login(){
-        console.log({email: email, password: password})
+    async function login(details: LoginInfo){
+        console.log(details);
+        const res = await authApi.login(details)
+        console.log(res)
+        if(!res.ok){
+            const err : any = res.data
+            setErrorMessage(err.error)
+            return setLoginFailed(true);
+        }
+        setLoginFailed(false)
+        console.log(res.data);
+        
     }
 
     return (
@@ -33,10 +47,10 @@ export default function LoginScreen() {
                 
             <AppFormFormik
                 initialValues={{email:'', password:''}}
-                onSubmit={values=>console.log(values)}
+                onSubmit={values=>login(values)}
                 validationSchema={validation_schema}
             >
-                        
+                <ErrorMessage error={errorMessage} visable={loginFailed}/>        
                 <AppFormFieldFormik
                     icon_name={"email"}
                     context_field_name={'email'} //same name as the from the validation fields

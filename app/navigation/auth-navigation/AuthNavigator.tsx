@@ -13,13 +13,11 @@ const Stack = createStackNavigator<AuthNavigationParams>();
 
 export default function AuthNavigator(){
     return (
-        <NavigationContainer theme={navigationTheme}>
-            <Stack.Navigator screenOptions={{headerShown: false}} >
-                <Stack.Screen name={AuthNavigationPages.Welcome}  component={WelcomScreen}/>
-                <Stack.Screen name={AuthNavigationPages.Login}  component={LoginScreen}/>
-                <Stack.Screen name={AuthNavigationPages.Register}  component={RegisterScreen}/>
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}} >
+            <Stack.Screen name={AuthNavigationPages.Welcome}  component={WelcomScreen}/>
+            <Stack.Screen name={AuthNavigationPages.Login}  component={LoginScreen}/>
+            <Stack.Screen name={AuthNavigationPages.Register}  component={RegisterScreen}/>
+        </Stack.Navigator>
     )
     
 }

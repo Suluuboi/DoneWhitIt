@@ -13,28 +13,11 @@ import navigationTheme from './app/navigation/navigation-theme';
 
 export default function App() {
 
-  var val: any = null
-
-  async function store(person: any) {
-    try {
-      await AsyncStorage.setItem('person', JSON.stringify({id: person}))
-      const value = await AsyncStorage.getItem('person')
-      value ? val = JSON.parse(value): null
-
-      console.log(val)
-    } catch (error) {
-      val = error
-    }
-    
-  } 
-
-  //store('her you go')
-  
-
   return (
     <>
       <NavigationContainer theme={navigationTheme}>
-          <AppNavigator/>
+          {/*<AppNavigator/>*/}
+          <AuthNavigator/>
       </NavigationContainer>
       <OfflineNotice/>
     </>
