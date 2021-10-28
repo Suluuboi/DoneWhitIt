@@ -2,17 +2,26 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { AppNavigationPages, AppNavigationParams, ListingEditSceenProps } from './types';
-import ListingEditScreen from '../../screens/ListingEdit.Screen'
-import UserAccountInfoScreen from '../../screens/UserAccountInfo.Screen'
+import ListingEditScreen from '../../screens/ListingEdit.Screen';
 import FeedNavigator from '../feed-navigation/FeedNavigator'
 import AccountNavigator from '../account-navigation/AccountNavigator';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import colors from '../../config/colors';
 import NewListingButton from './NewListingButton';
+import useNotification from '../../hooks/useNotification';
+import rootNavigation from '../root-navigation';
+
 
 const Tab = createBottomTabNavigator<AppNavigationParams>()
 
 export default function AppNavigator() {
+
+   function toPage(){
+       rootNavigation.navigate(AppNavigationPages.User)
+   }
+
+   useNotification((n)=>console.log(n))
+  // console.log(a)
+
     return (
         <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen 

@@ -19,7 +19,7 @@ async function store(key: string, data: any){
         await AsyncStorage.setItem(prefix + key, JSON.stringify(item))
 
     } catch (error) {
-        console.log(error)
+        console.log("Error storing data to cache storage",error)
     }
     
 }
@@ -53,7 +53,7 @@ async function get(key: string){
         return item.data
 
     } catch (error) {
-        console.log(error)
+        console.log("Error getting data from cache storage",error)
     }
     
 }

@@ -10,6 +10,14 @@
       "resizeMode": "cover",
       "backgroundColor": "#e63c4b"
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "sounds": ["./app/assets/sounds/notification.mp3"]
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },

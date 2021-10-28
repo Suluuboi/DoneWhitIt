@@ -11,6 +11,8 @@ import OfflineNotice from './app/components/OfflineNotice';
 import AppNavigator from './app/navigation/app-navigation/AppNavigator';
 import AuthNavigator from './app/navigation/auth-navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigation-theme';
+import NotificationTestingScreen from './app/screens/NotificationTesting';
+import {navigationRef} from './app/navigation/root-navigation';
 
 
 
@@ -19,6 +21,7 @@ export default function App() {
 
   const [user, setUser] = useState(null)
   const [ isReady, setIsReady ] = useState(false)
+  
 
   async function restoreUser() {
       const user = await authStorage.getUser();
@@ -34,12 +37,13 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{user, setUser}}>
-      <NavigationContainer theme={navigationTheme}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
           {user ?  <AppNavigator/> : <AuthNavigator/> }
 
       </NavigationContainer>
       <OfflineNotice/>
     </AuthContext.Provider>
+    /*<NotificationTestingScreen/>*/
   );
 }
 
