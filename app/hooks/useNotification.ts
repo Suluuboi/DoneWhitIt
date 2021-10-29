@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import rootNavigation from "../navigation/root-navigation";
-import { AppNavigationPages } from "../navigation/app-navigation/types";
 import expoPushTokenApi from "../api/push-notifications/expo-push-token-api";
+import { navigate } from "../navigation/root-navigation";
 
 /**Handels Push Notifications */
 Notifications.setNotificationHandler({
@@ -15,8 +14,12 @@ Notifications.setNotificationHandler({
     })
 });
 
+type UseNotificationType = {
 
-export default function useNotification(notificationListener?){
+}
+
+
+export default function useNotification(notificationListener?: boolean){
 
     const [notification, setNotification] = useState<Notifications.NotificationResponse>();
      //const [notification, setNotification] = useState(false);
@@ -37,6 +40,11 @@ export default function useNotification(notificationListener?){
              * will be run whenever a notification is selected */
             Notifications.addNotificationResponseReceivedListener((res)=>{
                 setNotification(res)
+                    const data_from_notification = res.notification.request.content.data
+                    const page = data_from_notification.page
+                    const params = data_from_notification.params
+                    if(page) goToPage(page, params)
+               
             })
             
             
@@ -48,8 +56,14 @@ export default function useNotification(notificationListener?){
          
     }, [])
 
-    return notification
+    return { notification }
+}
 
+/**Go to a page in the app */
+function goToPage(page, args?){
+    
+    navigate(page, args)
+        
 }
 
 /*Register The Authtoken */
@@ -76,8 +90,7 @@ async function registerForPushNotificationsAsync() {
 
         token = (await Notifications.getExpoPushTokenAsync()).data;
         //console.log(token);
-        const a = await expoPushTokenApi.register({token: token})
-        //console.log(a);
+        await expoPushTokenApi.register({token: token});
         
     } else {
         alert("Must use physical device for Push Notifications");
@@ -85,7 +98,7 @@ async function registerForPushNotificationsAsync() {
 
     if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
-        sound: 'default', //'default' | 'defaultCritical' | 'custom' | null;
+        sound: "default", //'default' | 'defaultCritical' | 'custom' | null;
         name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],

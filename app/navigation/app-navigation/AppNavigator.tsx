@@ -8,19 +8,17 @@ import AccountNavigator from '../account-navigation/AccountNavigator';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NewListingButton from './NewListingButton';
 import useNotification from '../../hooks/useNotification';
-import rootNavigation from '../root-navigation';
+import { navigate } from '../root-navigation';
 
 
 const Tab = createBottomTabNavigator<AppNavigationParams>()
 
 export default function AppNavigator() {
 
-   function toPage(){
-       rootNavigation.navigate(AppNavigationPages.User)
-   }
-
-   useNotification((n)=>console.log(n))
-  // console.log(a)
+   const {notification } = useNotification(true)
+   //if(notificaton) console.log(notificaton)//toPage(notificaton)
+   
+   
 
     return (
         <Tab.Navigator screenOptions={{headerShown: false}}>
