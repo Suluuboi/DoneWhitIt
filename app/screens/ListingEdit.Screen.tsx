@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as Yup from 'yup'
 import listingsApi from '../api/listings/listings-api'
-import { Listings } from '../api/listings/types'
+import { Listing } from '../api/listings/types'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import CategoryPickerItem from '../components/form/CategoryPickerItem'
@@ -44,7 +44,7 @@ export default function ListingEditScreen() {
     const [progress, setProgress] = useState(0)
     const location = useLocation()
 
-    async function handleSubmit(listing: Listings, formikHelpers: FormikHelpers<any>){
+    async function handleSubmit(listing: Listing, formikHelpers: FormikHelpers<any>){
         setProgress(0)
         setUploadVisable(true)
         const result = await listingsApi.addListing(location ? {...listing, location}: listing,

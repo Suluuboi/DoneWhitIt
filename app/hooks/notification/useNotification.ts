@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import expoPushTokenApi from "../api/push-notifications/expo-push-token-api";
-import { navigate } from "../navigation/root-navigation";
+import expoPushTokenApi from "../../api/push-notifications/expo-push-token-api";
 
 /**Handels Push Notifications */
 Notifications.setNotificationHandler({
@@ -15,11 +14,11 @@ Notifications.setNotificationHandler({
 });
 
 type UseNotificationType = {
-
+    notificationListener?: ()=>void
 }
 
 
-export default function useNotification(notificationListener?: boolean){
+export default function useNotification(notificationListener?:(args?)=>void){
 
     const [notification, setNotification] = useState<Notifications.NotificationResponse>();
      //const [notification, setNotification] = useState(false);
@@ -38,32 +37,20 @@ export default function useNotification(notificationListener?: boolean){
          if(notificationListener)
             /** Whatever function you give as notificationListener 
              * will be run whenever a notification is selected */
-            Notifications.addNotificationResponseReceivedListener((res)=>{
+            
+            Notifications.addNotificationResponseReceivedListener(notificationListener)//notificationListener will get the clicked notification data
+            /*Notifications.addNotificationResponseReceivedListener((res)=>{
                 setNotification(res)
                     const data_from_notification = res.notification.request.content.data
                     const page = data_from_notification.page
                     const params = data_from_notification.params
                     if(page) goToPage(page, params)
                
-            })
-            
-            
-
-         /*responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-             console.log(response.notification.request.content.data);
-             rootNavigation.navigate(AppNavigationPages.User)
-         });*/
+            })*/
          
     }, [])
 
-    return { notification }
-}
-
-/**Go to a page in the app */
-function goToPage(page, args?){
-    
-    navigate(page, args)
-        
+    return { schedualNotification, displayNotification }
 }
 
 /*Register The Authtoken */
@@ -84,8 +71,8 @@ async function registerForPushNotificationsAsync() {
         }
 
         if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
-        return;
+            alert("Failed to get push token for push notification!");
+            return;
         }
 
         token = (await Notifications.getExpoPushTokenAsync()).data;
@@ -110,4 +97,21 @@ async function registerForPushNotificationsAsync() {
     }
 
     return token;
+}
+
+/** Message Will Apear in the scedualed seconds */
+async function schedualNotification( notificationRequestInput:Notifications.NotificationRequestInput ) {
+
+    // Notifications show only when app is not active.
+    // (ie. another app being used or device's screen is locked)
+    return Notifications.scheduleNotificationAsync(
+        notificationRequestInput, 
+    );
+}
+/** Notification Will Apear immidaitly */
+function displayNotification(notificationRequestInput?:Notifications.NotificationRequestInput) {
+    notificationRequestInput.trigger = null //this will case the notification to trigger imediatly
+    Notifications.scheduleNotificationAsync(
+        notificationRequestInput
+    )  
 }

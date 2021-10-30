@@ -7,17 +7,35 @@ import FeedNavigator from '../feed-navigation/FeedNavigator'
 import AccountNavigator from '../account-navigation/AccountNavigator';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NewListingButton from './NewListingButton';
-import useNotification from '../../hooks/useNotification';
-import { navigate } from '../root-navigation';
+import useNotification from '../../hooks/notification/useNotification';
+import { NotificationResponse } from 'expo-notifications';
+import rootNavigation from  '../root-navigation';
 
 
 const Tab = createBottomTabNavigator<AppNavigationParams>()
 
 export default function AppNavigator() {
 
-   const {notification } = useNotification(true)
+
+   useNotification(reactToClickedNotification)
    //if(notificaton) console.log(notificaton)//toPage(notificaton)
    
+    function reactToClickedNotification(res: NotificationResponse){
+        const data_from_notification = res.notification.request.content.data //gedata from notification
+        if(data_from_notification){
+
+            console.log('Ther was data in the notification')
+            const page = data_from_notification.page as any //get the page
+            const params = data_from_notification.params //get the rams if any
+
+            if(page){
+                console.log(`Go to ${page}` );
+                    
+                rootNavigation.navigate(page, params)
+            } 
+        }
+    }
+        
    
 
     return (

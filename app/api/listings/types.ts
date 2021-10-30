@@ -22,7 +22,7 @@ export type category = {
     value: string
 }
 
-export type Listings = {
+export type Listing = {
     id          :   number,
     title       :   string,
     description :   string, 
@@ -31,5 +31,5 @@ export type Listings = {
     price       :   number,
     categoryId  :   number,
     userId      :   number,
-    location    :   location
+    location    ?:   location
 }

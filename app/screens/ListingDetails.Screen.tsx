@@ -1,9 +1,10 @@
 import { useRoute } from '@react-navigation/core';
 import React from 'react'
-import {  ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import {  ImageSourcePropType, StyleSheet, Text, View, KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
 import { Image } from 'react-native-expo-image-cache';
 
 import AppText from '../components/AppText'
+import ContactSellerForm from '../components/ContactSellerForm';
 import ListItem from '../components/ListItem'
 import colors from '../config/colors'
 import images from '../config/images'
@@ -11,19 +12,24 @@ import { ListingsDetailsSceenProps } from '../navigation/feed-navigation/types';
 
 const ListingDetailsScreen = ({route}:ListingsDetailsSceenProps) => {
     
-    const {image_url, title, description, price, thumbnail_url} = route.params
+    const { images: remote_images, title, price, description } = route.params
+    
     
     return (
-        <View style={styles.container}>
+        <ScrollView>
+            <KeyboardAvoidingView
+                behavior="position"
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
+		    >
             <Image 
                 style={styles.image} 
-                uri={image_url} 
+                uri={remote_images[0].url} 
                 tint='light'
-                preview={{uri : thumbnail_url}}
+                preview={{uri : remote_images[0].thumbnailUrl}}
             />
             <View style={styles.details_container}>
                 <AppText style={styles.title} text={title}/>
-                <AppText style={styles.price} text={price}/>
+                <AppText style={styles.price} text={price.toString()}/>
                 <AppText style={styles.description} text={description} />
 
                 <View style={styles.user_container}>
@@ -33,12 +39,13 @@ const ListingDetailsScreen = ({route}:ListingsDetailsSceenProps) => {
                         sub_title={"7 listings"} 
                     />
                 </View>
+
+                <ContactSellerForm listing={route.params}  />
                 
             </View>
 
-            
-            
-        </View>
+            </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 

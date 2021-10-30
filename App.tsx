@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
-import {  StyleSheet } from 'react-native';
+import {  StyleSheet, Text, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 
 import authStorage from './app/auth/auth-storage';
@@ -13,6 +13,7 @@ import AuthNavigator from './app/navigation/auth-navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigation-theme';
 import NotificationTestingScreen from './app/screens/NotificationTesting';
 import {navigationRef} from './app/navigation/root-navigation';
+import LocalNotificationTestingScreen from './app/screens/LocalNotificationTesting.Screen';
 
 
 
@@ -36,6 +37,7 @@ export default function App() {
             />
 
   return (
+    /*<LocalNotificationTestingScreen/>*/
     <AuthContext.Provider value={{user, setUser}}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
           {user ?  <AppNavigator/> : <AuthNavigator/> }
@@ -44,6 +46,7 @@ export default function App() {
       <OfflineNotice/>
     </AuthContext.Provider>
     /*<NotificationTestingScreen/>*/
+    
   );
 }
 

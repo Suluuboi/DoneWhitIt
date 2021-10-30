@@ -1,5 +1,7 @@
+import * as Notifications  from 'expo-notifications'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
+import AppButton from '../components/AppButton'
 
 import CustomSafeAreaView from '../components/CustomSafeAreaView'
 import Icon from '../components/Icon'
@@ -9,6 +11,7 @@ import ListItemSeparater from '../components/ListItemSeparater'
 import colors from '../config/colors'
 import images from '../config/images'
 import useAuth from '../hooks/useAuth'
+import useNotification from '../hooks/notification/useNotification'
 import { AccountNavigationPages, AccountSceenProps } from '../navigation/account-navigation/types'
 
 export type MenueItem = {
@@ -44,7 +47,12 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
     ] as MenueItem[]
 
     const { user, logOut } = useAuth()
+    const {displayNotification} = useNotification()
     
+    function print(a){
+        console.log('PRINT print Print')
+        
+    }
     
     return (
         <CustomSafeAreaView style={styles.container}>
@@ -84,9 +92,43 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
                     onPress={()=>logOut()}
                 />
             </View>
+
+            <AppButton 
+                        text={'local notification'} 
+                        onPress={()=>{
+                            displayNotification({  
+                                content:{   
+                                            title:'Big Title', 
+                                            body: "Body boty body",
+                                            sound : true
+                                        }, 
+                                trigger:{seconds:1}}
+                            )}
+                        } 
+            />
         </CustomSafeAreaView>
     )
 }
+
+/*const schedualNotification= (seconds) => {
+    const schedulingOptions : Notifications.NotificationRequestInput = {
+      content: {
+        title: 'This is a notification',
+        body: 'This is the body',
+        sound: true,
+        priority: Notifications.AndroidNotificationPriority.HIGH,
+        color: "blue",
+        data: {page: "Feed"}
+      },
+      trigger: {
+        seconds: seconds,
+      },
+    };
+    
+    Notifications.scheduleNotificationAsync(
+      schedulingOptions, 
+    );
+}*/
 
 const styles = StyleSheet.create({
     container:{

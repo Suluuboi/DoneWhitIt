@@ -7,7 +7,7 @@ import CustomSafeAreaView from '../components/CustomSafeAreaView';
 import colors from '../config/colors';
 import { FeedNavigationPages, ListingsSceenProps } from '../navigation/feed-navigation/types';
 import listingsApi from '../api/listings/listings-api';
-import { Listings } from '../api/listings/types';
+import { Listing } from '../api/listings/types';
 import AppText from '../components/AppText';
 import AppButton from '../components/AppButton';
 import LoadingActivity from '../components/LoadingActivity';
@@ -40,7 +40,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             {
             !loading &&
             <FlatList
-                data={listings as Listings[]}
+                data={listings as Listing[]}
                 keyExtractor={(item)=>item.id.toString()}
                 renderItem={({item})=>
                     <Card 
@@ -51,11 +51,13 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         onPress={()=>
                                 navigation.navigate(FeedNavigationPages.ListingsDetails, 
                                     {
-                                        image_url: item.images[0].url, 
+                                        images: item.images, 
                                         description: item.description, 
-                                        price: item.price.toString(), 
+                                        price: item.price, 
                                         title: item.title,
-                                        thumbnail_url: item.images[0].thumbnailUrl
+                                        id: item.id,
+                                        categoryId: item.categoryId,
+                                        userId: item.userId
                                         
                                     }
                             )

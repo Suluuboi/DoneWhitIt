@@ -10,6 +10,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#e63c4b"
     },
+    "notification":{
+      "iosDisplayInForeground": true
+    },
     "plugins": [
       [
         "expo-notifications",
