@@ -19,7 +19,7 @@ const ListingDetailsScreen = ({route}:ListingsDetailsSceenProps) => {
         <ScrollView>
             <KeyboardAvoidingView
                 behavior="position"
-                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 10}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 1}
 		    >
             <Image 
                 style={styles.image} 

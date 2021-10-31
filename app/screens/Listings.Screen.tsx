@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Card from '../components/Card';
@@ -27,10 +27,10 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
         <CustomSafeAreaView style={styles.container}>
             {
             
-                error && 
+                (error && !loading) && 
                 <>
                     <AppText style={styles.error_text} text={'Somthing whent wrong.'}/>
-                    <AppButton text={'Retry'} onPress={loadListings}/>
+                    <AppButton  text={'Retry'} onPress={loadListings}/>
                 </>
             
             }

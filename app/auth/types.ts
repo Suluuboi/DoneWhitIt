@@ -1,8 +1,8 @@
 export type JWTUserData = {
-    "email": "mosh@domain.com",
-    "iat": 1635325491,
-    "name": "Mosh",
-    "userId": 1,
+    email   : string,
+    iat     : number,
+    name    : string,
+    userId  : number,
 }
 
 export type AuthContextInfo = {

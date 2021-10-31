@@ -34,6 +34,7 @@ export default function AppNavigator() {
                 rootNavigation.navigate(page, params)
             } 
         }
+        console.log(res)
     }
         
    

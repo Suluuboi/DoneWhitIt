@@ -1,5 +1,5 @@
 import apiClient from "../client"
-import { Listings } from "./types";
+import { Listing } from "./types";
 
 const listings = '/listings';
 
@@ -9,7 +9,7 @@ function getListings(){
     })
 }
 
-function addListing(listing:Listings, onUploadProgress: any){
+function addListing(listing:Listing, onUploadProgress: any){
     const data = new FormData()
     data.append('title', listing.title);
     data.append('price', listing.price as any)

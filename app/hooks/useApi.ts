@@ -1,7 +1,5 @@
 import { ApiErrorResponse, ApiOkResponse } from "apisauce";
 import { useState } from "react";
-import listingsApi from "../api/listings/listings-api";
-import { Listings } from "../api/listings/types";
 
 interface ApiReturnType {
     data: any[];

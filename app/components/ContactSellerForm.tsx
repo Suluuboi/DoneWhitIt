@@ -16,10 +16,10 @@ export default function ContactSellerForm({listing}:ContactSellerFormType) {
 
     const { displayNotification } = useNotification()
 
-    async function sendMessage(message, fHelper: FormikHelpers<any>){
+    async function sendMessage(messageO, fHelper: FormikHelpers<any>){
         Keyboard.dismiss()
 
-        const res = await messagesApi.send(message.toString(), listing.id)
+        const res = await messagesApi.send(messageO.message.toString(), listing.id)
 
         if(!res.ok){
             console.log("Error getting Messages", res)

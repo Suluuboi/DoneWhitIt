@@ -2,6 +2,7 @@
 
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
+import { JWTUserData } from './types';
 
 const key = 'authToken'
 
@@ -23,7 +24,7 @@ async function getToken(){
 
 async function getUser() {
     const token = await getToken()
-    return (token) ? jwtDecode(token): null;
+    return (token) ? jwtDecode(token) as JWTUserData: null;
 }
 
 async function removeToken(){
