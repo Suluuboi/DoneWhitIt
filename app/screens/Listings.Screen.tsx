@@ -49,7 +49,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         title={item.title}
                         sub_title={item.price.toString()}    
                         onPress={()=>
-                                navigation.navigate(FeedNavigationPages.ListingsDetails, 
+                                navigation.navigate(FeedNavigationPages.ListingDetails, 
                                     {
                                         images: item.images, 
                                         description: item.description, 
@@ -61,7 +61,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                                         
                                     }
                             )
-                            //console.log('List')
+                            
                         }
                     />
                 }

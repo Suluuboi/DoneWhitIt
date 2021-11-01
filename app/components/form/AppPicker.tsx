@@ -38,13 +38,6 @@ export default function AppPicker({ placeholder, items, onSelectItem, width='100
             <TouchableWithoutFeedback onPress={()=>setModalVisable(true)}>
 
                 <View style={[styles.container, {width: width}]}> 
-                    {/*<MaterialCommunityIcons 
-                        color={defaultStyles.colors.medium_grey}
-                        name={'chevron-down'} 
-                        size={20}
-                                                        style={styles.icon}
-                    />*/}
-                    {/*label ? <AppText style={styles.text} text={label}/> :  <AppText style={styles.placeholder} text={placeholder}/>*/}
 
                     <Icon
                         name="apps"

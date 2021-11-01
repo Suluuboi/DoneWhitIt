@@ -2,17 +2,27 @@ import { StackNavigationProp } from "@react-navigation/stack"
 import { ImageSourcePropType } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Listing } from "../../api/listings/types";
+import { MaterialCommunityIconsSet } from "../../components/icon/types";
 
 export enum FeedNavigationPages {
     Listings = 'Listings',
-    ListingsDetails = 'ListingsDetails'
+    ListingDetails = 'ListingDetails',
+    ListingImage = 'ListingImage'
 }
 //const listing: Listings
 export type FeedNavigationParams={
     [FeedNavigationPages.Listings] : undefined
-    [FeedNavigationPages.ListingsDetails] : Listing
+    [FeedNavigationPages.ListingDetails] : Listing
+    [FeedNavigationPages.ListingImage] : {  
+                                            image_url           : string, 
+                                            left_icon           ?: MaterialCommunityIconsSet
+                                            handleLeftPress     ?: ()=>void,
+                                            right_icon          ?: MaterialCommunityIconsSet,
+                                            handleRightPress    ?: ()=>void
+                                        }
 }
 
 export type ListingsSceenProps = NativeStackScreenProps<FeedNavigationParams, FeedNavigationPages.Listings>;
-export type ListingsDetailsSceenProps = NativeStackScreenProps<FeedNavigationParams, FeedNavigationPages.ListingsDetails>;
+export type ListingDetailsSceenProps = NativeStackScreenProps<FeedNavigationParams, FeedNavigationPages.ListingDetails>;
+export type ListingImageSceenProps = NativeStackScreenProps<FeedNavigationParams, FeedNavigationPages.ListingImage>;
 

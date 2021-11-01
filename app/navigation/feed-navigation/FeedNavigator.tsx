@@ -5,6 +5,7 @@ import { FeedNavigationPages, FeedNavigationParams } from "./types";
 import ListingsScreen from "../../screens/Listings.Screen";
 import ListingDetailsScreen from "../../screens/ListingDetails.Screen";
 import { useRoute } from "@react-navigation/core";
+import ViewImageScreen from "../../screens/ViewImage.Screen";
 
 
 const Feed = createStackNavigator<FeedNavigationParams>();
@@ -18,10 +19,19 @@ export default function FeedNavigator(){
                 options={{headerShown: false}}
             />
             <Feed.Screen 
-                name={FeedNavigationPages.ListingsDetails}  
+                name={FeedNavigationPages.ListingDetails}  
                 component={ListingDetailsScreen}
                 options={({route})=>({
                     title : route.params.title,
+                    ...TransitionPresets.SlideFromRightIOS
+                })}
+            />
+            <Feed.Screen 
+                name={FeedNavigationPages.ListingImage}  
+                component={ViewImageScreen}
+                options={({route})=>({
+                    //title : route.params.title,
+                    headerShown: false,
                     ...TransitionPresets.SlideFromRightIOS
                 })}
             />

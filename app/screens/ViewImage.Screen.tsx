@@ -1,37 +1,43 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, SafeAreaView } from 'react-native'
+import { Text, View, Image, StyleSheet, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
 import colors from '../config/colors';
+import { ListingImageSceenProps } from '../navigation/feed-navigation/types';
 
-export class ViewImageScreen extends Component {
-    render() {
-        return (
-            <SafeAreaView style={{flex:1}}>
-                <View style={styles.container}>
 
-                    <View style={styles.buttons_row}>
-                        <View style={styles.left_button}>
+
+export default function ViewImageScreen({route}:ListingImageSceenProps) {
+
+    const {image_url:uri, handleLeftPress} =  route.params
+
+    return (
+        <SafeAreaView style={{flex:1}}>
+            <View style={styles.container}>
+
+                <Image 
+                    style={styles.image} 
+                    source={{uri: uri}}
+                />
+
+                <View style={styles.buttons_row}>
+                    <View style={styles.left_button}>
+                        <TouchableWithoutFeedback onPress={handleLeftPress}>
                             <MaterialCommunityIcons name={"close"} color={colors.white} size={35}/>
-                        </View>
-                        <View style={styles.right_button}>
-                            <MaterialCommunityIcons name={"trash-can-outline"} color={colors.white} size={35}/>
-                        </View>
+                        </TouchableWithoutFeedback>
                     </View>
                     
-
-                    <Image 
-                        style={styles.image} 
-                        source={require('../assets/images/chair.jpg')}
-                    />
-
-                    
+                    <View style={styles.right_button}>
+                        <TouchableWithoutFeedback>
+                            <MaterialCommunityIcons name={"trash-can-outline"} color={colors.white} size={35}/>
+                        </TouchableWithoutFeedback>
+                    </View>
                 </View>
-            </SafeAreaView>
-        )
-    }
+                    
+            </View>
+        </SafeAreaView>
+    )
 }
 
-export default ViewImageScreen;
 
 const styles = StyleSheet.create({
     container:{
@@ -40,7 +46,9 @@ const styles = StyleSheet.create({
     },
     buttons_row:{
         flexDirection:"row",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        position: 'absolute',
+        width: '100%'
     },
     left_button:{
         top:40,

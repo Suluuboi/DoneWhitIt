@@ -6,9 +6,7 @@ const endpoint = '/messages'
 async function get(){
     const user = await authStorage.getUser();
     const res = await apiClient.get(endpoint, user)
-    //console.log(res)
     return res
-    //return user_id
 }
 
 function send(message, listing_id){

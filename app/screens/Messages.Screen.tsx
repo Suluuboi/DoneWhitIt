@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, ImageSourcePropType, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
+
 import ListItem from '../components/ListItem'
 import Screen from '../components/CustomSafeAreaView'
 import images from '../config/images'
@@ -13,63 +14,50 @@ import authStorage from '../auth/auth-storage'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
 import LoadingActivity from '../components/LoadingActivity'
+import { AppMessage } from '../api/messages/type'
+import CustomSafeAreaView from '../components/CustomSafeAreaView'
 
-type MessageUser = {
-    id: number,
-    name: string
-}
-
-export type Message = {
-    content     : string,
-    dateTime    : number,
-    fromUser    : MessageUser
-    id          : number,
-    listingId   : number,
-    toUser      : MessageUser
-    image?      : ImageSourcePropType
-    /*id: number,
-    title: string,
-    description: string,
-    image: ImageSourcePropType*/
-}
 
 function MessagesScreen(){
 
-    const {data, loading, error, request: getUsersMessages} = useApi(messagesApi.get)
+    const {data, loading, error, request: getUserMessagesPayload} = useApi(messagesApi.get)
 
     async function getMessagses(){
-        await getUsersMessages()
-        if(data){
-            console.log(data)
-            setMessages(data)
+        
+        const payload  = await getUserMessagesPayload()
+        
+        if(payload.ok){
+            setMessages(payload.data as any)
         }
     }
 
     useEffect(()=>{
+        console.log("Messgae Use Efect")
         getMessagses()
     },[])
 
 
-    const [messages, setMessages] = useState<Message[]>(data)
+    const [messages, setMessages] = useState<AppMessage[]>(data)
     const [refreshing, setRefreshing] = useState(false)
 
-    function deleteMessage(message:Message) {
+    function deleteMessage(message:AppMessage) {
         setMessages(messages.filter(m=>m.id !== message.id))
     }
 
     function onRefresh() {
-        setMessages(data)
+        //setMessages(data)
+        getMessagses()
     }
 
     return (
-        <Screen>
+        <CustomSafeAreaView>
 
             {
             
                 (error && !loading) && 
                 <>
                     <AppText style={styles.error_text} text={'Somthing whent wrong.'}/>
-                    <AppButton  text={'Retry'} onPress={getUsersMessages}/>
+                    <AppButton  text={'Retry'} onPress={getUserMessagesPayload}/>
                 </>
         
             }
@@ -77,7 +65,7 @@ function MessagesScreen(){
             <LoadingActivity visable={loading}/>
 
 
-            {
+            {   (data.length != 0) &&
                 <FlatList
                     data={messages}
                     keyExtractor={messages=>messages.id.toString()}
@@ -106,14 +94,14 @@ function MessagesScreen(){
             
             {
                 (data.length === 0 )  &&
-                <View style={styles.container}>
+                <View style={styles.message_container}>
                     <AppText text={'No Messages Recieved Yet'}/>
                 </View>
                 
             }
             
 
-        </Screen>
+        </CustomSafeAreaView>
         
     )
 }
@@ -121,9 +109,9 @@ function MessagesScreen(){
 export default MessagesScreen
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        padding: 10,
+    message_container:{
+        //flex:1,
+        //padding: 10,
         backgroundColor: colors.light_grey,
         justifyContent: 'center',
         alignItems: 'center'

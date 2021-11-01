@@ -12,6 +12,8 @@ type WelcomScreenProps = {
 
 export default function WelcomScreen({navigation}: WelcomScreenProps) {
 
+    
+
 
     return (
         <ImageBackground 
