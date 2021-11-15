@@ -1,9 +1,11 @@
 import { create } from 'apisauce';
 import authStorage from '../auth/auth-storage';
 import cache from '../utility/cache';
+import serverInfo from '../utility/serverInfo';
+import { Listing } from './listings/types';
 
 const apiClient =  create({
-    baseURL: 'http://192.168.178.33:9000/api'
+    baseURL: `${serverInfo.getServerUrl()}/api`
 })
 
 //change request befor sending itto the server
@@ -20,6 +22,9 @@ apiClient.get = async (url, params, axiosConfig) =>{
     const response = await get<any>(url, params, axiosConfig)
     if (response.ok) {
 
+        //response.data
+        response.data = await serverInfo.addFullAndThumbnailImage(response.data)
+
         cache.store(url, response.data);
 
         return response;
@@ -32,3 +37,4 @@ apiClient.get = async (url, params, axiosConfig) =>{
 
 
 export default apiClient
+

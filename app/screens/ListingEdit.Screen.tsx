@@ -15,6 +15,7 @@ import ImagePicker from '../components/image/ImagePicker'
 import colors from '../config/colors'
 import defaultStyles from '../config/default.styles'
 import images from '../config/images'
+import useAuth from '../hooks/useAuth'
 import useLocation from '../hooks/useLocation'
 
 import { Selection } from './InputPlaygroud.Screen'
@@ -43,15 +44,16 @@ export default function ListingEditScreen() {
     const [uploadVisable, setUploadVisable] = useState(false)
     const [progress, setProgress] = useState(0)
     const location = useLocation()
+    const {user} = useAuth()
 
     async function handleSubmit(listing: Listing, formikHelpers: FormikHelpers<any>){
         setProgress(0)
         setUploadVisable(true)
-        const result = await listingsApi.addListing(location ? {...listing, location}: listing,
-                (progress : any)=> setProgress(progress) 
-            );
-        
-
+        const result = await listingsApi.addListing(
+            location ? {...listing, location}: listing,
+            (progress : any)=> setProgress(progress) ,
+            user.userId
+        );
 
         if(!result.ok) {
             setUploadVisable(false)

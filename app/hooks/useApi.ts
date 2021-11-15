@@ -23,6 +23,7 @@ export default function useApi(apiFunc): ApiReturnType{
 
         setError(!response.ok);
         setData(response.data);
+        //console.log(response.data)
         return response;
     
     }

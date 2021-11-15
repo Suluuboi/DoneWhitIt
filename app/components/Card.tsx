@@ -10,7 +10,7 @@ type CardProps = {
     image_url    : string,
     thumbnail_url: string,
     title       : string,
-    sub_title   : string,
+    sub_title   : string | number,
     onPress?    : ()=>void
 }
 
@@ -22,12 +22,10 @@ export default function Card({image_url, title, sub_title, thumbnail_url , onPre
         >
 
             <Image 
-                //resizeMode={"cover"} 
                 style={styles.image} 
                 uri={image_url}
                 preview={{uri : thumbnail_url}} 
                 tint='light'
-                //onProgress={}
             />
 
             <View style={styles.text_container}>

@@ -28,7 +28,7 @@ export default function LoginScreen() {
     async function login(details: LoginInfo){
 
         const res = await authApi.login(details)
-
+        
         if(!res.ok){
             const err : any = res.data
             setErrorMessage(err.error)

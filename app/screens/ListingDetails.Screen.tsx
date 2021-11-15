@@ -29,9 +29,9 @@ const ListingDetailsScreen = ({navigation ,route}:ListingDetailsSceenProps) => {
                                                             }
                             )*/
                             console.log('full screen ' + index )
-        setUrl(remote_images[index].url)
+        setUrl(remote_images[index].uri)
         setView(true)
-        childFunc.current.show(remote_images[index].url, 'arrow-left')
+        childFunc.current.show(remote_images[index].uri, 'arrow-left')
     }
     
     return (
@@ -49,13 +49,13 @@ const ListingDetailsScreen = ({navigation ,route}:ListingDetailsSceenProps) => {
 
             <ImageSwiper 
                 images={remote_images} 
-                name={'url'}  
+                name={'uri'}  
                 viewImage={(index)=>fullScreen(index)}
             />
             <ImageViewer ref={childFunc}/>
             <View style={styles.details_container}>
                 <AppText style={styles.title} text={title}/>
-                <AppText style={styles.price} text={price.toString()}/>
+                <AppText style={styles.price} text={price}/>
                 <AppText style={styles.description} text={description} />
 
                 <View style={styles.user_container}>

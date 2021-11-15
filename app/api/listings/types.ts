@@ -2,7 +2,7 @@ import { ImagePickerResult } from "expo-image-picker"
 import { ImageSourcePropType } from "react-native"
 
 export type ExpoImageInfo = {
-    url : string,
+    //url : string,
     thumbnailUrl: string,
     uri?: string,
     cancelled?: false, 
@@ -10,7 +10,8 @@ export type ExpoImageInfo = {
     width?: number, 
     height?: number, 
     exif?: any, 
-    base64?: string
+    base64?: string,
+    name        ?: string //this value is only on the server side and will be used to create 'thumbnailUrl' and uri
 }
 
 export type location = {
@@ -23,12 +24,12 @@ export type category = {
 }
 
 export type Listing = {
-    id          :   number,
+    listingId   :   string,
     title       :   string,
     description :   string, 
     images      :   ExpoImageInfo[],
     category    ?:  category
-    price       :   number,
+    price       :   number | string,
     categoryId  :   number,
     userId      :   number,
     location    ?:   location
