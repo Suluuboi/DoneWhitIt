@@ -1,17 +1,17 @@
 import React from 'react'
-import { View, StyleSheet,  TouchableOpacity } from 'react-native'
-import { Image } from 'react-native-expo-image-cache';
-
+import { View, StyleSheet,  TouchableOpacity, Image } from 'react-native'
+import { Image  as CacheImage} from 'react-native-expo-image-cache';
 
 import colors from '../config/colors';
+import images from '../config/images';
 import AppText from './AppText';
 
 type CardProps = {
-    image_url    : string,
-    thumbnail_url: string,
-    title       : string,
-    sub_title   : string | number,
-    onPress?    : ()=>void
+    image_url       : string | Object,
+    thumbnail_url?  : string | Object,
+    title           : string,
+    sub_title       : string | number,
+    onPress?        : ()=>void
 }
 
 export default function Card({image_url, title, sub_title, thumbnail_url , onPress}: CardProps) {
@@ -21,12 +21,22 @@ export default function Card({image_url, title, sub_title, thumbnail_url , onPre
             onPress={onPress}
         >
 
-            <Image 
-                style={styles.image} 
-                uri={image_url}
-                preview={{uri : thumbnail_url}} 
-                tint='light'
-            />
+            {
+                (typeof image_url === 'string' && typeof thumbnail_url === 'string') ? 
+                    <CacheImage 
+                        style={styles.image} 
+                        uri={image_url}
+                        preview={{uri : thumbnail_url}} 
+                        tint='light'
+                    />
+                :
+
+                <Image
+                    style={styles.image}
+                    source={images.no_image}
+                />
+        
+            }
 
             <View style={styles.text_container}>
                 <AppText style={styles.title} text={title}/>

@@ -33,10 +33,8 @@ function getImagePath(listing:Listing){
  async function addFullAndThumbnailImage(serverData: any){ 
     if(!Array.isArray(serverData)) return serverData
 
-    console.log('Its an array')
-
     if(serverData[0]?.listingId){
-        console.log('we have a listing')
+       
         return serverData.map((listing: Listing)=>{
 
             

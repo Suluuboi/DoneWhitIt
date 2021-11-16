@@ -26,7 +26,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
         //loadListings()
         //New
 
-        const socket = openSocket("http://192.168.178.33:9100");
+        const socket = openSocket(serverInfo.getServerUrl());
         if (!fetched) fetchListings();
 
         connectToListing(socket);
@@ -47,7 +47,6 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
     const fetchListings = async () => {
         const { data: items, ok: response } = await listingsApi.getListings();
-        console.log(items)
         if (!response) return;
 
         listings2 = items.slice(0);
@@ -59,8 +58,8 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
         console.log('create new listing.');
         console.log(listing)
         const listingWithImages = await serverInfo.addFullAndThumbnailImage([listing]);
-        console.log(listingWithImages);
-        listings2.unshift(listingWithImages);
+        //console.log(listingWithImages);
+        listings2.unshift(listingWithImages[0]);
 
         setItems(() => [...[], ...listings2]);
     };
@@ -111,8 +110,8 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                     renderItem={({item})=>
                         /**getImagePath(item)+'/'+item.images[0].uri+'_full.jpg' */
                         <Card 
-                            image_url={ item.images ? item.images[0]?.uri : {src: images.no_image}}
-                            thumbnail_url={item.images ? item.images[0]?.thumbnailUrl : {src:images.no_image}}
+                            image_url={ item.images ? item.images[0]?.uri : images.no_image }
+                            thumbnail_url={item.images ? item.images[0]?.thumbnailUrl : images.no_image }
                             title={item.title}
                             sub_title={item.price}    
                             onPress={()=>
