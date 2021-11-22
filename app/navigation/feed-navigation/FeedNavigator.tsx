@@ -22,7 +22,8 @@ export default function FeedNavigator(){
                 name={FeedNavigationPages.ListingDetails}  
                 component={ListingDetailsScreen}
                 options={({route})=>({
-                    title : route.params.title,
+                    //title : route.params.title,
+                    headerShown: false,
                     ...TransitionPresets.SlideFromRightIOS
                 })}
             />

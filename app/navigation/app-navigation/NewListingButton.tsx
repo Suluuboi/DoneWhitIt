@@ -12,7 +12,7 @@ type NewListingButtonProps = {
     onPress: ()=>void
 }
 
-export default function NewListingButton({size=40, color=colors.primary, onPress}:NewListingButtonProps) {
+export default function NewListingButton({size=40, color=colors.medium_grey, onPress}:NewListingButtonProps) {
 
     const increase = 20//the number to increase the size by
 

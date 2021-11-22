@@ -1,12 +1,22 @@
+import { useContext } from "react";
+import authStorage from "../../auth/auth-storage";
+import AuthContext from "../../auth/context";
 import apiClient from "../client"
 import { Listing } from "./types";
 
 const listings = '/listing';
+const a = ''
 
 function getListings(){
     return apiClient.get(listings).then((res)=>{
         return res as any
     })
+}
+
+async function getUserListing(){
+    const { userId } = await authStorage.getUser();
+    //console.log(userId)
+    return apiClient.get(`/user/${userId}/listings`)
 }
 
 function addListing(listing:Listing, onUploadProgress: any, userId: string){
@@ -37,5 +47,5 @@ function addListing(listing:Listing, onUploadProgress: any, userId: string){
 }
 
 export default {
-    getListings, addListing
+    getListings, addListing, getUserListing
 }

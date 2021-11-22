@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React from 'react'
 import { KeyboardTypeOptions, NativeSyntheticEvent, Platform, StyleSheet, Text, TextInput, TextInputFocusEventData, View } from 'react-native'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import colors from '../../config/colors';
 
 
@@ -11,6 +12,7 @@ import { MaterialCommunityIconsSet } from '../icon/types';
 
 type AppTextInputProps={
     icon_name   ?: MaterialCommunityIconsSet,
+    post_icon_name ?: MaterialCommunityIconsSet, 
     placeholder ?: string,
     onChangeText?: (text: string)=>void
     autoCorrect?: boolean
@@ -25,22 +27,26 @@ type AppTextInputProps={
     width?: number | string | undefined//the width of the text
     multiline?: boolean | undefined
     value: string | undefined
+    clearText: ()=> void
 }
 
 export default function AppTextInput({  icon_name,placeholder, onChangeText ,
                                         autoCorrect, keyboardType,autoCapitalize, 
                                         textContentType, secureTextEntry, onBlur, 
                                         autoFocus=false, maxLength, numberOfLines,
-                                        value,
+                                        value, post_icon_name, clearText,
                                         multiline=false, width='100%'}:AppTextInputProps) {
     return (
         <View style={[styles.container,{width: width}]}> 
-            {icon_name &&   <MaterialCommunityIcons 
-                                                color={defaultStyles.colors.medium_grey}
-                                                name={icon_name as any} 
-                                                size={20}
-                                                style={styles.icon}
-                            />}
+            {
+                icon_name &&   
+                <MaterialCommunityIcons 
+                    color={defaultStyles.colors.medium_grey}
+                    name={icon_name as any} 
+                    size={20}
+                    style={styles.icon}
+                />
+            }
             <View style={styles.text_container}>
                 <TextInput  
                     placeholderTextColor={defaultStyles.colors.medium_grey}
@@ -60,6 +66,17 @@ export default function AppTextInput({  icon_name,placeholder, onChangeText ,
                     multiline={multiline}
                 />
             </View>
+            {
+                (post_icon_name && value.length >=1) &&   
+                <TouchableWithoutFeedback>
+                    <MaterialCommunityIcons onPress={clearText}
+                        color={defaultStyles.colors.medium_grey}
+                        name={post_icon_name as any} 
+                        size={20}
+                        style={styles.icon}
+                    />
+                </TouchableWithoutFeedback>
+            }
 
         </View>
     )

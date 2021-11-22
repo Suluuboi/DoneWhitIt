@@ -2,7 +2,6 @@ import { create } from 'apisauce';
 import authStorage from '../auth/auth-storage';
 import cache from '../utility/cache';
 import serverInfo from '../utility/serverInfo';
-import { Listing } from './listings/types';
 
 const apiClient =  create({
     baseURL: `${serverInfo.getServerUrl()}/api`

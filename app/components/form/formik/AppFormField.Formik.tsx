@@ -1,13 +1,14 @@
 import { FormikContextType, FormikErrors, FormikTouched } from 'formik'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { KeyboardTypeOptions, StyleSheet, Text, View } from 'react-native'
-import { useFormikContext } from 'formik'
+import { useFormikContext } from 'formik';
+import debounce from 'lodash.debounce';
 
 import AppTextInput from '../AppTextInput'
 import ErrorMessage from '../ErrorMessage'
 import AppText from '../../AppText'
 import { string } from 'yup/lib/locale'
-import { MaterialCommunityIconsSet } from '../../icon/types'
+import { MaterialCommunityIconsSet } from '../../icon/types';
 
 /**
  * NB!!! this component needs to be inserted into a formik component
@@ -19,7 +20,8 @@ type AppFormFieldProps={
     placeholder?: string;
     //possible options for App text that dont include any formic data
     icon_name   ?: MaterialCommunityIconsSet,
-    onChangeText?: (text: string)=>void
+    post_icon_name ?: MaterialCommunityIconsSet,
+    onChangeText ?: (text: string)=>void
     autoCorrect?: boolean
     autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined
     keyboardType?: KeyboardTypeOptions,
@@ -31,10 +33,11 @@ type AppFormFieldProps={
     numberOfLines?: number
     width?:number | string | undefined
     multiline?: boolean | undefined
+    autoSubmit ?: number//how long befor auto submit
 }
 
-export default function AppFormFieldFormik({context_field_name, 
-                                            placeholder, autoCapitalize, 
+export default function AppFormFieldFormik({context_field_name, post_icon_name, autoSubmit,
+                                            placeholder, autoCapitalize, onChangeText,
                                             autoCorrect, keyboardType, textContentType, 
                                             secureTextEntry, icon_name, autoFocus, 
                                             maxLength, numberOfLines, width='100%', 
@@ -43,12 +46,23 @@ export default function AppFormFieldFormik({context_field_name,
 
     const { setFieldTouched,
             setFieldValue ,
+            handleSubmit,
             errors, touched, values} = useFormikContext<any>()//context
+
+    function clearTextBox(field_name: string ){
+        setFieldValue(field_name, '')
+        autoSubmit && handleSubmit()
+    }
+
+    const debounceText= useCallback(debounce((nextValue) => handleSubmit() , autoSubmit), [])
 
     return (
         <>
             <AppTextInput 
-                onChangeText={(text)=>setFieldValue(context_field_name, text)}    
+                onChangeText={(text)=>{
+                    setFieldValue(context_field_name, text) 
+                    autoSubmit && debounceText(text)
+                    onChangeText && onChangeText}}    
                 onBlur={()=>setFieldTouched(context_field_name)}
                 value={values[context_field_name]}
                 //other props that are the same in AppTextInput
@@ -64,6 +78,8 @@ export default function AppFormFieldFormik({context_field_name,
                 numberOfLines={numberOfLines ? numberOfLines : undefined}
                 width={width}
                 multiline={multiline}
+                post_icon_name={post_icon_name}
+                clearText={()=>clearTextBox(context_field_name)}
             />
 
             {/** Error Message*/}
@@ -75,3 +91,4 @@ export default function AppFormFieldFormik({context_field_name,
 const styles = StyleSheet.create({
     
 })
+

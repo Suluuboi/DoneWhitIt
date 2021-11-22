@@ -6,6 +6,7 @@ import { shadow } from 'react-native-paper';
 
 import AppText from '../components/AppText'
 import ContactSellerForm from '../components/ContactSellerForm';
+import CustomSafeAreaView from '../components/CustomSafeAreaView';
 import { MaterialCommunityIconsSet } from '../components/icon/types';
 import ImageSwiper from '../components/image/ImageSwiper';
 import ImageViewer from '../components/image/ImageViewer';
@@ -35,6 +36,7 @@ const ListingDetailsScreen = ({navigation ,route}:ListingDetailsSceenProps) => {
     }
     
     return (
+        <CustomSafeAreaView>
         <ScrollView>
             <KeyboardAvoidingView
                 behavior="position"
@@ -51,6 +53,7 @@ const ListingDetailsScreen = ({navigation ,route}:ListingDetailsSceenProps) => {
                 images={remote_images} 
                 name={'uri'}  
                 viewImage={(index)=>fullScreen(index)}
+                goBack={()=>navigation.goBack()}
             />
             <ImageViewer ref={childFunc}/>
             <View style={styles.details_container}>
@@ -72,6 +75,7 @@ const ListingDetailsScreen = ({navigation ,route}:ListingDetailsSceenProps) => {
 
             </KeyboardAvoidingView>
         </ScrollView>
+        </CustomSafeAreaView>
     )
 }
 

@@ -40,7 +40,7 @@ const categories : Selection[] = [
 
 export default function ListingEditScreen() {
 
-    const [result, setResult] = useState()
+    //const [result, setResult] = useState()
     const [uploadVisable, setUploadVisable] = useState(false)
     const [progress, setProgress] = useState(0)
     const location = useLocation()
@@ -113,7 +113,7 @@ export default function ListingEditScreen() {
                         multiline
                     />
                     <AppSubmitButtonFormik label={'Post'}/>
-                    <Text>{JSON.stringify(result, null,"\t")}</Text>
+                    {/*<Text>{JSON.stringify(result, null,"\t")}</Text>*/}
                 </AppFormFormik>
 
             </ScrollView>

@@ -33,7 +33,8 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
             icon:{
                 name: 'format-list-bulleted',
                 backgroundColor: colors.primary
-            }
+            },
+            taragetScreen: 'UserListings'
         },
         {   
             key:"2",
@@ -92,43 +93,10 @@ export default function UserAccountInfoScreen({navigation}: AccountSceenProps) {
                     onPress={()=>logOut()}
                 />
             </View>
-
-            <AppButton 
-                        text={'local notification'} 
-                        onPress={()=>{
-                            displayNotification({  
-                                content:{   
-                                            title:'Big Title', 
-                                            body: "Body boty body",
-                                            sound : true
-                                        }, 
-                                trigger:{seconds:1}}
-                            )}
-                        } 
-            />
         </CustomSafeAreaView>
     )
 }
 
-/*const schedualNotification= (seconds) => {
-    const schedulingOptions : Notifications.NotificationRequestInput = {
-      content: {
-        title: 'This is a notification',
-        body: 'This is the body',
-        sound: true,
-        priority: Notifications.AndroidNotificationPriority.HIGH,
-        color: "blue",
-        data: {page: "Feed"}
-      },
-      trigger: {
-        seconds: seconds,
-      },
-    };
-    
-    Notifications.scheduleNotificationAsync(
-      schedulingOptions, 
-    );
-}*/
 
 const styles = StyleSheet.create({
     container:{

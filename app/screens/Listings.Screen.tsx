@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, FlatList, View, Text } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react'
+import { StyleSheet, FlatList, View, Text, Animated } from 'react-native';
 import openSocket from "socket.io-client";
 
 import Card from '../components/Card';
@@ -14,80 +14,29 @@ import LoadingActivity from '../components/LoadingActivity';
 import useApi from '../hooks/useApi';
 import serverInfo from '../utility/serverInfo';
 import images from '../config/images';
+import AppHeader from '../components/AppHeader';
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
-    let [items, setItems] = useState<any>([]);
-    const [fetched, setFetched] = useState(false);
-    const { data: listings, error, 
-            loading, request: loadListings} = useApi(listingsApi.getListings)
+    const { data: listings, 
+            error, 
+            loading, 
+            request: loadListings} = useApi(listingsApi.getListings, 'listing')
+    const scrollY = useRef(new Animated.Value(0)).current;
 
     useEffect(()=>{
-        //loadListings()
-        //New
-
-        const socket = openSocket(serverInfo.getServerUrl());
-        if (!fetched) fetchListings();
-
-        connectToListing(socket);
+        loadListings();
     },[])
-
-    
-
-    let listings2 = [];
-
-    const connectToListing = (socket) => {
-        console.log('Socect connected')
-        socket.on("listing", (date) => {
-            if (date.action === "create") createListing(date.listing);
-            if (date.action === "delete") deleteListing(date.listing);
-            if (date.action === "update") updateListing(date.listing);
-        });
-    };
-
-    const fetchListings = async () => {
-        const { data: items, ok: response } = await listingsApi.getListings();
-        if (!response) return;
-
-        listings2 = items.slice(0);
-        setItems(items);
-        setFetched(true);
-    };
-
-    const createListing = async function (listing) {
-        console.log('create new listing.');
-        console.log(listing)
-        const listingWithImages = await serverInfo.addFullAndThumbnailImage([listing]);
-        //console.log(listingWithImages);
-        listings2.unshift(listingWithImages[0]);
-
-        setItems(() => [...[], ...listings2]);
-    };
-
-    const updateListing = (listing) => {
-        let newListings = listings2.slice(0);
-        newListings.map((obj) => {
-        if (obj.listingId === listing.listingId) {
-            obj.title = listing.title;
-            obj.price = listing.price;
-            obj.category = listing.category;
-            obj.description = listing.description;
-        }
-        });
-
-        setItems(newListings);
-    };
-
-    const deleteListing = (listing) => {
-        listings2 = listings2.filter(function (obj) {
-        return obj.listingId !== listing.listingId;
-        });
-
-        setItems(() => [...[], ...listings2]);
-    };
 
     return (
         <CustomSafeAreaView style={styles.container}>
+
+            <AppHeader 
+                left_icon={'water'} 
+                center_text={'WuZa'} 
+                right_icon={'magnify'}
+                animatedValue={scrollY} 
+            />
             
             {
                 
@@ -102,10 +51,10 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             <LoadingActivity visable={loading}/>
             
             {
-                /**(!loading && listings && Array.isArray(listings)) &&*/
+                (!loading && listings && Array.isArray(listings)) &&
 
                 <FlatList style={{width: '100%'}}
-                    data={items as Listing[]} /**listings as Listing[] */
+                    data={listings as Listing[]} /**listings as Listing[] */
                     keyExtractor={(item)=>item.listingId}
                     renderItem={({item})=>
                         /**getImagePath(item)+'/'+item.images[0].uri+'_full.jpg' */
@@ -124,7 +73,6 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                                             listingId: item.listingId,
                                             categoryId: item.categoryId,
                                             userId: item.userId
-                                            
                                         }
                                 )
                                 
@@ -139,6 +87,10 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                             text={'No Listing Currently Posted, Come back later.'}
                         />
                     }
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: false }
+                    )}
                 />
 
                 
@@ -153,7 +105,7 @@ export default ListingsScreen;
 const styles = StyleSheet.create({
     container:{
       flex:1,
-      padding: 10,
+      paddingHorizontal: 10,
       backgroundColor: colors.light_grey,
       justifyContent: 'center',
       alignItems: 'center'

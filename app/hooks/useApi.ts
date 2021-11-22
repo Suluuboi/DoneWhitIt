@@ -14,10 +14,10 @@ interface ApiReturnType {
 /*****  Get data from the server    */
 
 export default function useApi(apiFunc, socketName?: string): ApiReturnType{
-    const [data, setData] = useState<any>([]);
-    const [error, setError] = useState<boolean>()
-    const [loading, setLoading] = useState<boolean>()
-    const [listening, setListening] = useState(false)//check if the socketIO is enabled
+    const [ data, setData   ] = useState<any>([]);
+    const [ error, setError ] = useState<boolean>()
+    const [ loading, setLoading ] = useState<boolean>()
+    const [ listening, setListening ] = useState<boolean>(false)//check if the socketIO is enabled
     let data2 = []
     
     async function request(...args){
@@ -27,24 +27,47 @@ export default function useApi(apiFunc, socketName?: string): ApiReturnType{
 
         setError(!response.ok);
         setData(response.data);
-        data2 = data.slice(0);
+
+        if(socketName && !listening){
+            
+            if(response.ok && Array.isArray(response.data)){
+                data2 = response.data.slice(0);
+                connectToListing(socketName)
+            }
+            
+        }
+        
         return response;
     }
+
+    /** All the socketIO code */
+
+    function connectToListing(socketName: string) {
+        const socket = openSocket(serverInfo.getServerUrl());
+        
+        setListening(true)//ensure we only listen onse
+        socket.on(socketName/*"listing"*/, (date) => {
+            if (date.action === "create") createListing(date.listing);
+            //if (date.action === "delete") deleteListing(date.listing);
+            //if (date.action === "update") updateListing(date.listing);
+        });
+    };
+
+    const createListing = async function (listing) {
+        if(!error && listing){
+
+            const listingWithImages = await serverInfo.addFullAndThumbnailImage([listing]);
+            data2.unshift(listingWithImages[0]);
+
+            setData(() => [...[], ...data2]);
+        }
+        
+    };
 
     return {error, data, loading, request} 
 }
 
-/** All the socketIO code */
 
-const connectToListing = (socketName: string) => {
-    const socket = openSocket(serverInfo.getServerUrl());
-    console.log('connect successfully')
-    socket.on(socketName/*"listing"*/, (date) => {
-        //if (date.action === "create") createListing(date.listing);
-        //if (date.action === "delete") deleteListing(date.listing);
-        //if (date.action === "update") updateListing(date.listing);
-    });
-};
 
 /*const fetchListings = async () => {
     const { data: items, ok: response } = await listingsApi.getListings();
@@ -53,19 +76,9 @@ const connectToListing = (socketName: string) => {
     listings2 = items.slice(0);
     setItems(items);
     setFetched(true);
-};
+};*/
 
-const createListing = async function (listing) {
-    //console.log('create new listing.');
-    //console.log(listing)
-    const listingWithImages = await serverInfo.addFullAndThumbnailImage([listing]);
-    //console.log(listingWithImages);
-    listings2.unshift(listingWithImages[0]);
-
-    setItems(() => [...[], ...listings2]);
-};
-
-const updateListing = (listing) => {
+/*const updateListing = (listing) => {
     let newListings = listings2.slice(0);
     newListings.map((obj) => {
     if (obj.listingId === listing.listingId) {

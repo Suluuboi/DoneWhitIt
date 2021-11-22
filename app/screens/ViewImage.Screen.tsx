@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
+import { Text, View, Image, StyleSheet, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+
 import colors from '../config/colors';
 import { ListingImageSceenProps } from '../navigation/feed-navigation/types';
 

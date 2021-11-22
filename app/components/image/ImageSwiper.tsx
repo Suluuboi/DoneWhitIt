@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import { Alert, Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'react-native-expo-image-cache';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import Constants from 'expo-constants'
+
+import colors from '../../config/colors';
 
 /**Given an array of images Create Swipe through all the images */
 
@@ -13,9 +16,10 @@ type ImageSwiperType = {
     images      : any[]
     name        : string //the is the name under witch the images are stored in the array 
     viewImage   ?: (image_index: number)=>void
+    goBack      ?: ()=>void
 }
 
-export default function ImageSwiper({images, name, viewImage}: ImageSwiperType) {
+export default function ImageSwiper({images, name, viewImage, goBack}: ImageSwiperType) {
 
     const [selected, setSelected] = useState(0)
 
@@ -73,6 +77,16 @@ export default function ImageSwiper({images, name, viewImage}: ImageSwiperType) 
                 }
             </View>
 
+            <View style={styles.back_button}>
+                <TouchableWithoutFeedback onPress={goBack}>
+                    <MaterialCommunityIcons 
+                        name={"arrow-left"} 
+                        color={colors.white} 
+                        size={35}
+                    />
+                </TouchableWithoutFeedback>
+            </View>
+
         </View>
     )
 }
@@ -107,6 +121,11 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         margin: 5,
         backgroundColor: "#fff"
+    },
+    back_button:{
+        position: 'absolute',
+        top: Constants.statusBarHeight,
+        left: 10
     }
 })
 

@@ -11,11 +11,8 @@ import OfflineNotice from './app/components/OfflineNotice';
 import AppNavigator from './app/navigation/app-navigation/AppNavigator';
 import AuthNavigator from './app/navigation/auth-navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigation-theme';
-import NotificationTestingScreen from './app/screens/NotificationTesting';
 import {navigationRef} from './app/navigation/root-navigation';
-import LocalNotificationTestingScreen from './app/screens/LocalNotificationTesting.Screen';
-
-
+import MyListingsScreen from './app/screens/MyListings.Screen';
 
 
 export default function App() {
@@ -37,6 +34,7 @@ export default function App() {
             />
 
   return (
+    /*<MyListingsScreen/>*/
     /*<LocalNotificationTestingScreen/>*/
     <AuthContext.Provider value={{user, setUser}}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
