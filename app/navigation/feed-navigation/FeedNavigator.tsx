@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 
 import { FeedNavigationPages, FeedNavigationParams } from "./types";
-import ListingsScreen from "../../screens/Listings.Screen";
+import ListingsScreen from "../../screens/Listings/Listings.Screen";
 import ListingDetailsScreen from "../../screens/ListingDetails.Screen";
 import { useRoute } from "@react-navigation/core";
 import ViewImageScreen from "../../screens/ViewImage.Screen";

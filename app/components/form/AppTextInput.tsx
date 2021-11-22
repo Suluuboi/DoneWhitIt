@@ -25,6 +25,7 @@ type AppTextInputProps={
     maxLength?: number,
     numberOfLines?: number,
     width?: number | string | undefined//the width of the text
+    height?: number | string | undefined
     multiline?: boolean | undefined
     value: string | undefined
     clearText: ()=> void
@@ -35,7 +36,9 @@ export default function AppTextInput({  icon_name,placeholder, onChangeText ,
                                         textContentType, secureTextEntry, onBlur, 
                                         autoFocus=false, maxLength, numberOfLines,
                                         value, post_icon_name, clearText,
-                                        multiline=false, width='100%'}:AppTextInputProps) {
+                                        multiline=false, width='100%', 
+                                        //height='100%'
+                                    }:AppTextInputProps) {
     return (
         <View style={[styles.container,{width: width}]}> 
             {
@@ -64,6 +67,7 @@ export default function AppTextInput({  icon_name,placeholder, onChangeText ,
                     numberOfLines={numberOfLines ? numberOfLines :undefined}
                     autoFocus={autoFocus}
                     multiline={multiline}
+                    
                 />
             </View>
             {
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
         paddingTop: 3
     },
     text_container:{
-        width: '100%'
+        width: '100%',
+        //height: 25
     }
 })

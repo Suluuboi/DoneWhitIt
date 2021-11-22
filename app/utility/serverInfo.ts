@@ -1,7 +1,7 @@
 import { number } from "yup/lib/locale";
 import { Listing } from "../api/listings/types";
 
-const initialIp = '192.168.178.33'
+const initialIp = '172.16.48.219'
 const initialPort = '9100';
 const initialURL = `http://${initialIp}:${initialPort}`
 const initialImagePath = `${initialURL}/assets` 

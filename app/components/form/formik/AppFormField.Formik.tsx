@@ -32,6 +32,7 @@ type AppFormFieldProps={
     maxLength?: number
     numberOfLines?: number
     width?:number | string | undefined
+    height?:number | string | undefined
     multiline?: boolean | undefined
     autoSubmit ?: number//how long befor auto submit
 }
@@ -41,6 +42,7 @@ export default function AppFormFieldFormik({context_field_name, post_icon_name, 
                                             autoCorrect, keyboardType, textContentType, 
                                             secureTextEntry, icon_name, autoFocus, 
                                             maxLength, numberOfLines, width='100%', 
+                                            //height='100%',
                                             multiline=undefined}:AppFormFieldProps) { 
 
 
@@ -77,6 +79,7 @@ export default function AppFormFieldFormik({context_field_name, post_icon_name, 
                 maxLength={maxLength ? maxLength : undefined}
                 numberOfLines={numberOfLines ? numberOfLines : undefined}
                 width={width}
+                //height={height}
                 multiline={multiline}
                 post_icon_name={post_icon_name}
                 clearText={()=>clearTextBox(context_field_name)}

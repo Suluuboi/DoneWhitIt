@@ -9,8 +9,9 @@ import Icon from './Icon';
 import { MaterialCommunityIconsSet } from './icon/types';
 import AppTextInput from './form/AppTextInput';
 import { AppFormFieldFormik, AppFormFormik } from './form/formik';
+import FilterModal  from '../screens/Listings/FilterModal'
 
-const HEADER_HEIGHT = 70;
+//const HEADER_HEIGHT = 70;
 
 
 type HeaderProps = {
@@ -19,32 +20,40 @@ type HeaderProps = {
     center_text?: string,
     leftIconClicked?: () => void,
     rightIconClicked?: () => void,
-    animatedValue : Animated.Value
+    animatedValue : Animated.Value,
+    header_height : number
 }
 
 const validationSchema = Yup.object().shape({
     search: Yup.string().label("Search"),
 })
 
-function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconClicked, rightIconClicked}:HeaderProps){
+function AppHeader({left_icon, 
+                    right_icon, 
+                    center_text, 
+                    animatedValue ,
+                    leftIconClicked, 
+                    rightIconClicked, 
+                    header_height=50}:HeaderProps){
 
     const [search, setSearch ] = useState(false)
+    const [showFilterModal, setShowFilterModal] = useState(false)
 
-    const diffClamp = Animated.diffClamp(animatedValue, 0, HEADER_HEIGHT)
+    const diffClamp = Animated.diffClamp(animatedValue, 0, header_height)
     const translateY = diffClamp.interpolate({
-        inputRange:[0, HEADER_HEIGHT],
-        outputRange: [0, -HEADER_HEIGHT],
+        inputRange:[0, header_height],
+        outputRange: [0, -header_height],
         extrapolate: 'clamp'
     })
 
     const opacity = diffClamp.interpolate({
-        inputRange:[0, HEADER_HEIGHT],
+        inputRange:[0, header_height],
         outputRange: [1, 0],
         extrapolate: 'clamp'
     })
 
     return(
-
+        <>
         <Animated.View 
             style={
                 [
@@ -53,7 +62,8 @@ function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconC
                         transform:[
                             {translateY: translateY}
                         ],
-                        opacity: opacity
+                        opacity: opacity,
+                        height: header_height
                     }
                     
                 ]
@@ -62,13 +72,21 @@ function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconC
             {   
                 <TouchableOpacity
                     style={header_styles.container_left_image}
-                    onPress={leftIconClicked}
-                >
-                    <Icon 
+                    onPress={()=>setShowFilterModal(true)}
+                >   
+                    {   
+                        search ? 
+                        <Icon 
+                            background_color={colors.white}
+                            name={'filter'}
+                            icon_color={colors.medium_grey}
+                        />:
+                        <Icon 
                         background_color={colors.primary}
                         name={left_icon}
-                    />
-                    {/*{SetImage.create(left_icon,"contain",30,30)}*/}
+                        />
+                    }
+                    
                 </TouchableOpacity>
             }
 
@@ -79,7 +97,7 @@ function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconC
                 >   
                     {
                         !search ?
-                        <AppText text={center_text}/>:
+                        <AppText text={''/*center_text*/}/>:
                         <AppFormFormik
                             initialValues={{
                                 search: ''
@@ -93,6 +111,7 @@ function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconC
                                 placeholder={'Search'}
                                 post_icon_name={'close-box'}
                                 autoSubmit={1500}
+
                             />
                         </AppFormFormik>            
                     }
@@ -119,7 +138,16 @@ function AppHeader({left_icon, right_icon, center_text, animatedValue ,leftIconC
                 </TouchableOpacity>
             }
         </Animated.View>
-        
+
+
+        {
+            showFilterModal &&
+                <FilterModal
+                    isVisible={showFilterModal}
+                    onClose={() => setShowFilterModal(false)}
+                />}
+
+        </>
     )
 }
 
@@ -134,7 +162,7 @@ const header_styles = StyleSheet.create({
         left: 0,
         right: 0,
         flexDirection: 'row', 
-        height: HEADER_HEIGHT,
+        //height: HEADER_HEIGHT,
         backgroundColor: colors.white,
         zIndex: 100
     },
@@ -160,7 +188,7 @@ const header_styles = StyleSheet.create({
     center_container_style:{
         width: '90%',
         height: "100%",
-        backgroundColor: colors.light_grey,
+        //backgroundColor: colors.light_grey,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 40//SIZES.radius

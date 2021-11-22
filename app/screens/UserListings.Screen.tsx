@@ -104,7 +104,7 @@ export default function UserListingsScreen({navigation}:UserListingsSceenProps) 
                             scrollEventThrottle={16}
                             onScroll={Animated.event(
                                 [{ nativeEvent: { contentOffset: { y: offset } } }],
-                                { useNativeDriver: false }
+                                { useNativeDriver: false}
                             )}
                         />
                         }

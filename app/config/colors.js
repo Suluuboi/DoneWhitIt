@@ -6,7 +6,11 @@ const colors = {
     medium_grey: "#6e6969",
     light_grey: "#f7f4f4",
     dark_grey: "#0c0c0c",
-    danger: '#ff5252'
+    danger: '#ff5252',
+    //transparent
+    transparent: 'transparent',
+    transparentBlack1: "rgba(0, 0, 0, 0.1)",
+    transparentBlack7: "rgba(0, 0, 0, 0.7)"
 }
 
 export default colors;

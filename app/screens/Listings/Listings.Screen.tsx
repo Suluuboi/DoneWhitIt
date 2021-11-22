@@ -2,19 +2,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, FlatList, View, Text, Animated } from 'react-native';
 import openSocket from "socket.io-client";
 
-import Card from '../components/Card';
-import CustomSafeAreaView from '../components/CustomSafeAreaView';
-import colors from '../config/colors';
-import { FeedNavigationPages, ListingsSceenProps } from '../navigation/feed-navigation/types';
-import listingsApi from '../api/listings/listings-api';
-import { Listing } from '../api/listings/types';
-import AppText from '../components/AppText';
-import AppButton from '../components/AppButton';
-import LoadingActivity from '../components/LoadingActivity';
-import useApi from '../hooks/useApi';
-import serverInfo from '../utility/serverInfo';
-import images from '../config/images';
-import AppHeader from '../components/AppHeader';
+import Card from '../../components/Card';
+import CustomSafeAreaView from '../../components/CustomSafeAreaView';
+import colors from '../../config/colors';
+import { FeedNavigationPages, ListingsSceenProps } from '../../navigation/feed-navigation/types';
+import listingsApi from '../../api/listings/listings-api';
+import { Listing } from '../../api/listings/types';
+import AppText from '../../components/AppText';
+import AppButton from '../../components/AppButton';
+import LoadingActivity from '../../components/LoadingActivity';
+import useApi from '../../hooks/useApi';
+import serverInfo from '../../utility/serverInfo';
+import images from '../../config/images';
+import AppHeader from '../../components/AppHeader';
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
@@ -23,6 +23,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             loading, 
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
     const scrollY = useRef(new Animated.Value(0)).current;
+    const header_height = 69
 
     useEffect(()=>{
         loadListings();
@@ -36,6 +37,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 center_text={'WuZa'} 
                 right_icon={'magnify'}
                 animatedValue={scrollY} 
+                header_height = {header_height}
             />
             
             {
@@ -53,7 +55,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             {
                 (!loading && listings && Array.isArray(listings)) &&
 
-                <FlatList style={{width: '100%'}}
+                <FlatList style={{width: '100%', paddingTop: header_height + 10}}
                     data={listings as Listing[]} /**listings as Listing[] */
                     keyExtractor={(item)=>item.listingId}
                     renderItem={({item})=>
