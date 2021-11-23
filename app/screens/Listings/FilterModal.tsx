@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     View,
     Text,
@@ -11,13 +11,16 @@ import {
     TouchableOpacity
 } from 'react-native';
 import AppButton from '../../components/AppButton';
+import debounce from 'lodash.debounce';
 
 
 import AppText from '../../components/AppText';
 import AppTextInput from '../../components/form/AppTextInput';
 import IconButton from '../../components/IconButton';
+import TextButton from '../../components/TexButton';
 import TwoPointSlider from '../../components/TwoPointSlider';
 import colors from '../../config/colors';
+import constants from '../../config/constants';
 import { SIZES } from '../../config/phone';
 
 type SectionProps= {
@@ -26,15 +29,16 @@ type SectionProps= {
     children?: any
 }
 
-export default function FilterModal({ isVisible, onClose }) {
+export default function FilterModal({ isVisible, onClose, onFilter }) {
 
     const modalAnimatedValue = React.useRef(new Animated.Value(0)).current
 
     const [showFilterModal, setShowFilterModal] = React.useState(isVisible)
 
     const [deliveryTime, setDeliveryTime] = React.useState("")
-    const [ratings, setRatings] = React.useState("")
-    const [tags, setTags] = React.useState("")
+    const [priceRange, setPriceRange] = React.useState<undefined | any[]>()
+    const [category, setCategory] = React.useState<undefined | number>()
+    const debouncePriceRange = useCallback(debounce((nextValue) => setPriceRange(nextValue) , 100), [])
 
     React.useEffect(() => {
         if (showFilterModal) {
@@ -61,50 +65,29 @@ export default function FilterModal({ isVisible, onClose }) {
 
     const Section = ({ title, onPress, children } : SectionProps) => {
         return (
-            <View>
+            <View style={{marginBottom: 20}}>
                 {/* Header */}
                 <View
                     style={{
                         flexDirection: 'row',
-                        marginHorizontal: SIZES.padding,
+                        //marginHorizontal: 10,
                         marginTop: 30,
                         marginBottom: 20
                     }}
                 >
-                    <AppText text={title}/>
+                    <AppText 
+                        text={title}
+                        style={{
+                            color: colors.black,
+                            left: 0
+                        }}
+                    />
     
-                    <TouchableOpacity
-                        onPress={onPress}
-                    >
-                        <AppText text={`Show All`}/>
-                    </TouchableOpacity>
                 </View>
     
                 {/* Content */}
                 {children}
             </View>
-        )
-    }
-
-    function renderDistance() {
-        return (
-            <Section
-                title="Distance"
-            >
-                <View
-                    style={{
-                        alignItems: 'center'
-                    }}
-                >
-                    <TwoPointSlider
-                        values={[3, 10]}
-                        min={1}
-                        max={20}
-                        postfix="km"
-                        onValuesChange={(values) => console.log(values)}
-                    />
-                </View>
-            </Section>
         )
     }
 
@@ -120,13 +103,50 @@ export default function FilterModal({ isVisible, onClose }) {
                     }}
                 >
                     <TwoPointSlider
-                        values={[10, 50]}
+                        values={priceRange? priceRange : [100, 2200]}
                         min={1}
-                        max={100}
-                        prefix="$"
+                        max={10000}
+                        prefix="N$"
                         postfix=""
-                        onValuesChange={(values) => console.log(values)}
+                        onValuesChange={(values) => debouncePriceRange(values) }
                     />
+                </View>
+            </Section>
+        )
+    }
+
+    function renderCategories() {
+        return (
+            <Section
+                title="Category"
+            >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap'
+                    }}
+                >
+                    {constants.categories.map((item, index) => {
+                        return (
+                            <TextButton
+
+                                key={`Tags-${index}`}
+                                label={item.label}
+                                labelStyle={{
+                                    color: item.value == category ? colors.white : colors.meduim_grey
+                                }}
+                                buttonContainerStyle={{
+                                    height: 50,
+                                    margin: 5,
+                                    paddingHorizontal: SIZES.padding,
+                                    alignItems: 'center',
+                                    borderRadius: 8,
+                                    backgroundColor: item.value == category ? colors.primary : colors.light_grey
+                                }}
+                                onPress={() => setCategory(item.value)}
+                            />
+                        )
+                    })}
                 </View>
             </Section>
         )
@@ -179,17 +199,18 @@ export default function FilterModal({ isVisible, onClose }) {
                             alignItems: 'center'
                         }}
                     >
-                        <AppText  text={`Filter Your Search`}/>
-
+                        <AppText style={{fontWeight: 'bold'}}  text={`Filter Your Search`}/>
+                        <View style={{flex: 1}}/>
                         <IconButton
                             containerStyle={{
                                 borderWidth: 2,
                                 borderRadius: 10,
-                                borderColor: colors.medium_grey
+                                borderColor: colors.medium_grey,
                             }}
                             icon={'close-box'}
                             iconStyle={{
-                                //tintColor: colors.medium_grey
+                                borderColor : colors.light_grey,
+                                color: colors.medium_grey
                             }}
                             onPress={() => setShowFilterModal(false)}
                         />
@@ -200,14 +221,13 @@ export default function FilterModal({ isVisible, onClose }) {
                         contentContainerStyle={{
                             paddingBottom: Platform.OS === 'ios' ? (SIZES.height > 700 ? 250 : 180) : 180,
                         }}
-                    >
-                        {/* Distance */}
-                        {renderDistance()}
-
-                        
+                    >   
 
                         {/* Pricing Range */}
                         {renderPricingRange()}
+
+                        {/* Categories */}
+                        {renderCategories()}
 
 
                     </ScrollView>
@@ -216,10 +236,10 @@ export default function FilterModal({ isVisible, onClose }) {
                     <View
                         style={{
                             position: 'absolute',
-                            bottom: Platform.OS === 'ios' ? (SIZES.height > 700 ? 150 : 60) : 60,
+                            bottom: Platform.OS === 'ios' ? (SIZES.height > 700 ? 150 : 60) : 150,
                             left: 0,
                             right: 0,
-                            height: 110,
+                            //height: 110,
                             paddingHorizontal: SIZES.padding,
                             paddingVertical: SIZES.radius,
                             backgroundColor: colors.white
@@ -227,7 +247,15 @@ export default function FilterModal({ isVisible, onClose }) {
                     >
                         <AppButton
                             text={'Apply Filter'}
-                            onPress={()=>console.log('Filter')}
+                            onPress={()=>{
+                                onFilter(
+                                    {
+                                        category,
+                                        priceRange
+                                    }
+                                )
+                                setShowFilterModal(false)
+                            }}
                         />
                     </View>
                 </Animated.View>

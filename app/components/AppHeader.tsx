@@ -145,6 +145,10 @@ function AppHeader({left_icon,
                 <FilterModal
                     isVisible={showFilterModal}
                     onClose={() => setShowFilterModal(false)}
+                    onFilter={(filter)=>{
+                        //setShowFilterModal(false)
+                        console.log(filter)
+                    }}
                 />}
 
         </>

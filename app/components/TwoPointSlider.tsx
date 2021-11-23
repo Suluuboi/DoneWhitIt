@@ -23,10 +23,10 @@ export default function TwoPointSlider({ values, min, max, prefix, postfix, onVa
     return (
         <MultiSlider
             values={values}
-            sliderLength={SIZES.width - (10 * 2) - 20}
+            sliderLength={SIZES.width - (10 * 2) - 50}
             min={min}
             max={max}
-            step={1}
+            step={20}
             markerOffsetY={20}
             selectedStyle={{
                 backgroundColor: colors.primary
@@ -57,7 +57,7 @@ export default function TwoPointSlider({ values, min, max, prefix, postfix, onVa
                                 ...styles.shadow
                             }}
                         />
-                        <Text style={{ marginTop: 5, color: colors.darkGray }}>{prefix}{e.currentValue} {postfix}</Text>
+                        <Text style={{ marginTop: 5, color: colors.darkGray, width: '100%' }}>{prefix}{e.currentValue} {postfix}</Text>
                     </View>
                 )
             }}

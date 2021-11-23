@@ -1,7 +1,7 @@
 import { number } from "yup/lib/locale";
 import { Listing } from "../api/listings/types";
 
-const initialIp = '172.16.48.219'
+const initialIp = '192.168.178.33'
 const initialPort = '9100';
 const initialURL = `http://${initialIp}:${initialPort}`
 const initialImagePath = `${initialURL}/assets` 
@@ -72,18 +72,6 @@ function getImagePath(listing:Listing){
 
 }
 
-const debounce = (func: any, delay: number)=>{
-    
-    return (...args) =>{
-        if(timeOutId) clearTimeout(timeOutId)
-
-        timeOutId = setTimeout(()=>{
-            func.apply(null, args)
-
-        }, delay)
-    }
-}
-
 export default{
-    getImagePath, getIpAddress, getPort, getServerUrl, addFullAndThumbnailImage, debounce
+    getImagePath, getIpAddress, getPort, getServerUrl, addFullAndThumbnailImage
 }

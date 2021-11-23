@@ -13,12 +13,12 @@ import AppImagePickerFormik from '../components/form/formik/AppImagePicker.Formi
 import AppPickerFormik from '../components/form/formik/AppPicker.Formik'
 import ImagePicker from '../components/image/ImagePicker'
 import colors from '../config/colors'
+import constants from '../config/constants'
 import defaultStyles from '../config/default.styles'
 import images from '../config/images'
 import useAuth from '../hooks/useAuth'
 import useLocation from '../hooks/useLocation'
 
-import { Selection } from './InputPlaygroud.Screen'
 import UploadScreen from './Upload.Screen'
 
 const validationSchema = Yup.object().shape({
@@ -29,14 +29,7 @@ const validationSchema = Yup.object().shape({
     category: Yup.object().required().nullable().label('Category')
 })
 
-const categories : Selection[] = [
-    {label:"Funiture", value:1, icon: 'chair-rolling', background_color : defaultStyles.colors.primary },
-    {label:"Clothing", value:2, icon: 'tshirt-crew', background_color: defaultStyles.colors.danger },
-    {label:"Cameras", value:3, icon: 'camera', background_color: 'green'},
-    {label:"Fashion", value:4, icon: 'shoe-heel', background_color : defaultStyles.colors.secondary },
-    {label:"Music & Sound", value:5, icon: 'music', background_color: defaultStyles.colors.danger },
-    {label:"Sport", value:6, icon: 'tennis', background_color: defaultStyles.colors.dark_gey}
-]
+
 
 export default function ListingEditScreen() {
 
@@ -100,7 +93,7 @@ export default function ListingEditScreen() {
                         width={'40%'}
                     />
                     <AppPickerFormik
-                        items={categories}
+                        items={constants.categories}
                         name={'category'}
                         placeholder={'Category'}
                         width={'60%'}

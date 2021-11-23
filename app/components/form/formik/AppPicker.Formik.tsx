@@ -1,7 +1,7 @@
 import {  useFormikContext } from 'formik'
 import React, { ElementType } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Selection } from '../../../screens/InputPlaygroud.Screen'
+import { Selection } from '../../../config/constants'
 import AppPicker from '../AppPicker'
 
 
