@@ -15,6 +15,9 @@ import useApi from '../../hooks/useApi';
 import serverInfo from '../../utility/serverInfo';
 import images from '../../config/images';
 import AppHeader from '../../components/AppHeader';
+import AnimatedCollapsingHeader from '../../components/AnimatedCollapsingHeader';
+
+const HEADER_HEIGHT = 70
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
@@ -23,23 +26,29 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             loading, 
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
     const scrollY = useRef(new Animated.Value(0)).current;
-    const header_height = 69
+    
 
     useEffect(()=>{
         loadListings();
     },[])
 
     return (
-        <CustomSafeAreaView style={styles.container}>
+        <CustomSafeAreaView>
 
-            <AppHeader 
+            {/*<AppHeader 
                 left_icon={'water'} 
                 center_text={'WuZa'} 
                 right_icon={'magnify'}
-                animatedValue={scrollY} 
+                //animatedValue={scrollY} 
                 header_height = {header_height}
-            />
-            
+            />*/}
+            <AnimatedCollapsingHeader
+                headerHightPixel={HEADER_HEIGHT}
+                animatedValue={scrollY}
+                subHeaderHeightPercentage={15}
+                headerComponent={<AppHeader header_height={HEADER_HEIGHT}/>}
+            >
+            <View style={{width:'100%', height: '100%', paddingHorizontal: 10}}>
             {
                 
                 (error || !listings || !Array.isArray(listings) ) && 
@@ -55,7 +64,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             {
                 (!loading && listings && Array.isArray(listings)) &&
 
-                <FlatList style={{width: '100%', paddingTop: header_height + 10}}
+                <FlatList style={{width: '100%', paddingTop: HEADER_HEIGHT + 10}}
                     data={listings as Listing[]} /**listings as Listing[] */
                     keyExtractor={(item)=>item.listingId}
                     renderItem={({item})=>
@@ -82,6 +91,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         />
                     }
                     showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={16}
                     ListEmptyComponent={()=>
 
                         <AppText 
@@ -97,6 +107,8 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
                 
             }
+            </View>
+            </AnimatedCollapsingHeader>
             
         </CustomSafeAreaView>
     )
@@ -109,8 +121,9 @@ const styles = StyleSheet.create({
       flex:1,
       paddingHorizontal: 10,
       backgroundColor: colors.light_grey,
-      justifyContent: 'center',
-      alignItems: 'center'
+      height: '100%'
+      //justifyContent: 'center',
+      //alignItems: 'center'
     },
     error_text: {
         color: colors.danger,

@@ -13,12 +13,13 @@ import { MaterialCommunityIconsSet } from './icon/types';
 
 type IconButtonProps = {
     containerStyle ?: StyleProp<ViewStyle>, 
+    iconSize?: number
     icon: MaterialCommunityIconsSet, 
     iconStyle ?: StyleProp<TextStyle>, 
     onPress : ()=>void
 }
 
-function IconButton({ containerStyle, icon, iconStyle, onPress }: IconButtonProps) {
+function IconButton({ containerStyle, icon, iconStyle, onPress, iconSize=30 }: IconButtonProps) {
 
     return (
         <TouchableOpacity
@@ -26,7 +27,7 @@ function IconButton({ containerStyle, icon, iconStyle, onPress }: IconButtonProp
             onPress={onPress}
         >
             <MaterialCommunityIcons
-                size={30}
+                size={iconSize}
                 style={iconStyle}
                 name={icon as any}
             />

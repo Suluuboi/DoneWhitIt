@@ -35,7 +35,6 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
 
     const [showFilterModal, setShowFilterModal] = React.useState(isVisible)
 
-    const [deliveryTime, setDeliveryTime] = React.useState("")
     const [priceRange, setPriceRange] = React.useState<undefined | any[]>()
     const [category, setCategory] = React.useState<undefined | number>()
     const debouncePriceRange = useCallback(debounce((nextValue) => setPriceRange(nextValue) , 100), [])

@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import jwtDecode from 'jwt-decode';
-import React, { useState, useEffect } from 'react';
-import {  StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {  Animated, StyleSheet, Text, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 
 import authStorage from './app/auth/auth-storage';
@@ -13,6 +13,9 @@ import AuthNavigator from './app/navigation/auth-navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigation-theme';
 import {navigationRef} from './app/navigation/root-navigation';
 import MyListingsScreen from './app/screens/MyListings.Screen';
+import AnimatedHeader2 from './app/components/AnimatedCollapsingHeader';
+import { FlatList } from 'react-native-gesture-handler';
+import ListLayout from './app/screens/AnimatedListLayoutTest.Screen';
 
 
 export default function App() {
@@ -26,6 +29,7 @@ export default function App() {
       if(user) setUser(user)
   }
 
+
   if(!isReady)
     return <AppLoading 
               startAsync={restoreUser} 
@@ -34,7 +38,6 @@ export default function App() {
             />
 
   return (
-    /*<MyListingsScreen/>*/
     /*<LocalNotificationTestingScreen/>*/
     <AuthContext.Provider value={{user, setUser}}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>

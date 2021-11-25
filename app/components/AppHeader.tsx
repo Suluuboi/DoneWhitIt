@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet, Animated } from 'react-native';
+import { Text, TouchableOpacity, View, Image, StyleSheet, Animated, FlatList} from 'react-native';
 import Constants from 'expo-constants'
 import * as Yup from 'yup'
 
@@ -10,8 +10,10 @@ import { MaterialCommunityIconsSet } from './icon/types';
 import AppTextInput from './form/AppTextInput';
 import { AppFormFieldFormik, AppFormFormik } from './form/formik';
 import FilterModal  from '../screens/Listings/FilterModal'
+import { Filter, FilterValues } from '../utility/types';
+import FilterBadge from './filter/FilterBadge';
 
-//const HEADER_HEIGHT = 70;
+const HEADER_CHANGE = 50;
 
 
 type HeaderProps = {
@@ -20,7 +22,6 @@ type HeaderProps = {
     center_text?: string,
     leftIconClicked?: () => void,
     rightIconClicked?: () => void,
-    animatedValue : Animated.Value,
     header_height : number
 }
 
@@ -31,97 +32,90 @@ const validationSchema = Yup.object().shape({
 function AppHeader({left_icon, 
                     right_icon, 
                     center_text, 
-                    animatedValue ,
                     leftIconClicked, 
                     rightIconClicked, 
                     header_height=50}:HeaderProps){
 
     const [search, setSearch ] = useState(false)
     const [showFilterModal, setShowFilterModal] = useState(false)
-
-    const diffClamp = Animated.diffClamp(animatedValue, 0, header_height)
-    const translateY = diffClamp.interpolate({
-        inputRange:[0, header_height],
-        outputRange: [0, -header_height],
-        extrapolate: 'clamp'
-    })
-
-    const opacity = diffClamp.interpolate({
-        inputRange:[0, header_height],
-        outputRange: [1, 0],
-        extrapolate: 'clamp'
-    })
+    const [filterValues, setFilterValues] = useState<Filter | undefined>()
+    const [dynamicHeaderHeight, setDynamicHeaderHeight] = useState(header_height)
 
     return(
         <>
-        <Animated.View 
+        <View 
             style={
-                [
-                    header_styles.container,
-                    {
-                        transform:[
-                            {translateY: translateY}
-                        ],
-                        opacity: opacity,
-                        height: header_height
-                    }
-                    
-                ]
+                header_styles.container
             } 
         > 
-            {   
-                <TouchableOpacity
-                    style={header_styles.container_left_image}
-                    onPress={()=>setShowFilterModal(true)}
-                >   
-                    {   
-                        search ? 
-                        <Icon 
-                            background_color={colors.white}
-                            name={'filter'}
-                            icon_color={colors.medium_grey}
-                        />:
-                        <Icon 
-                        background_color={colors.primary}
-                        name={left_icon}
-                        />
-                    }
-                    
-                </TouchableOpacity>
-            }
+            <View style={{flexDirection: 'column', flex: 1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
+                {   
+                    <TouchableOpacity
+                        style={header_styles.container_left_image}
+                        onPress={()=>search ? setShowFilterModal(true): null}
+                    >   
+                        {   
+                            search ? 
+                            <Icon 
+                                background_color={colors.white}
+                                name={'filter'}
+                                icon_color={colors.medium_grey}
+                            />:
+                            <Icon 
+                            background_color={colors.primary}
+                            name={left_icon}
+                            />
+                        }
+                        
+                    </TouchableOpacity>
+                }
 
-            <View style={header_styles.center_container}>
-                  
+                <View style={header_styles.center_container}>
+                    
                 <View
                     style={header_styles.center_container_style}
                 >   
                     {
                         !search ?
+
                         <AppText text={''/*center_text*/}/>:
+
                         <AppFormFormik
                             initialValues={{
                                 search: ''
                             }}
-                            onSubmit={(value, formicHelper)=>console.log(value)}
+                            onSubmit={(value, formicHelper)=>{
+                                console.log({filterValues,...value})
+                            }}
                             validationSchema={validationSchema}
                         >
-                            <AppFormFieldFormik  
-                                maxLength={255} 
-                                context_field_name={'search'} 
-                                placeholder={'Search'}
-                                post_icon_name={'close-box'}
-                                autoSubmit={1500}
 
-                            />
+                        <AppFormFieldFormik  
+                            maxLength={255} 
+                            context_field_name={'search'} 
+                            placeholder={'Search'}
+                            post_icon_name={'close-box'}
+                            autoSubmit={1500}
+                        />
                         </AppFormFormik>            
                     }
                 </View> 
+
             </View>
 
             {   
                 <TouchableOpacity
                     style={header_styles.container_right_image}
-                    onPress={()=>search ? setSearch(!search): setSearch(!search)}
+                    onPress={()=>{
+                        if(search){
+                            setSearch(!search)
+                            setDynamicHeaderHeight(dynamicHeaderHeight-HEADER_CHANGE)
+                        }else{
+                            setSearch(!search) 
+                            setDynamicHeaderHeight(dynamicHeaderHeight+HEADER_CHANGE)
+                        }
+                    }}
                 >
                     {   !search ?
                         <Icon 
@@ -137,17 +131,58 @@ function AppHeader({left_icon,
                     }
                 </TouchableOpacity>
             }
-        </Animated.View>
+            </View>
+            {
+                (search && filterValues) &&
+                <View style={{
+                    //flex:1, 
+                    flexDirection: 'row', 
+                    backgroundColor: colors.white,
+                    borderColor: 'black',
+                    zIndex: 100
+                    }}
+                >
+                    <FlatList
+                        horizontal 
+                        showsHorizontalScrollIndicator={false} 
+                        data={[filterValues]}
+                        keyExtractor={(item, index)=>index.toString()}
+                        renderItem={({item})=>
+                            item &&
+                            <FilterBadge text={`${item['category']}`} clear={()=>console.log(JSON.stringify(item, null, '\t'))} />
+                        }
 
+                    >
+                        
+                    </FlatList>
+                </View>
+            }
+
+            </View>
+        </View>
 
         {
             showFilterModal &&
                 <FilterModal
                     isVisible={showFilterModal}
                     onClose={() => setShowFilterModal(false)}
-                    onFilter={(filter)=>{
+                    onFilter={(filter: FilterValues)=>{
                         //setShowFilterModal(false)
-                        console.log(filter)
+                        setFilterValues(filter as any);
+                        if(filter){
+                            if(filter.category || filter.priceRange){
+                                console.log('filter set')
+                                console.log(dynamicHeaderHeight , header_height)
+                                if(dynamicHeaderHeight <= header_height){
+                                    console.log('Change header')
+                                    setDynamicHeaderHeight(dynamicHeaderHeight+HEADER_CHANGE )
+                                }   
+                                
+                            }else{
+                                setDynamicHeaderHeight(header_height)
+                            }
+                        }
+                        //console.log(filter)
                     }}
                 />}
 
@@ -161,14 +196,7 @@ export default AppHeader;
 const header_styles = StyleSheet.create({
 
     container : { 
-        position: 'absolute',
-        top: Constants.statusBarHeight,
-        left: 0,
-        right: 0,
-        flexDirection: 'row', 
-        //height: HEADER_HEIGHT,
-        backgroundColor: colors.white,
-        zIndex: 100
+        flex: 1
     },
 
     container_left_image: {
