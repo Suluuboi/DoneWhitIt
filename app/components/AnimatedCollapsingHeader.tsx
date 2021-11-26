@@ -15,6 +15,7 @@ type AnimatedHeader2Props = {
     bodyBackgroundColor     ?: ColorValue,
     animatedValue           ?: Animated.Value
     headerComponent         ?: JSX.Element
+    subHeaderComponent      ?: JSX.Element
     children?               : React.ReactNode
 }
 
@@ -26,6 +27,7 @@ export default function AnimatedCollapsingHeader({
                         subHeaderBackgroundColor=colors.white, 
                         bodyBackgroundColor=colors.light_grey,
                         headerComponent=null,
+                        subHeaderComponent=null,
                         animatedValue
                     }: AnimatedHeader2Props){
 
@@ -78,7 +80,9 @@ export default function AnimatedCollapsingHeader({
                         ],
                         backgroundColor: subHeaderBackgroundColor,
                     }
-                ]}></Animated.View>}
+                ]}>
+                    {subHeaderComponent}    
+                </Animated.View>}
 
                 {/**Colapsing header */}
                 <Animated.View style={[

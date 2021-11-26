@@ -16,6 +16,7 @@ import serverInfo from '../../utility/serverInfo';
 import images from '../../config/images';
 import AppHeader from '../../components/AppHeader';
 import AnimatedCollapsingHeader from '../../components/AnimatedCollapsingHeader';
+import FilterBadge from '../../components/filter/FilterBadge';
 
 const HEADER_HEIGHT = 70
 
@@ -45,8 +46,33 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             <AnimatedCollapsingHeader
                 headerHightPixel={HEADER_HEIGHT}
                 animatedValue={scrollY}
-                subHeaderHeightPercentage={15}
+                subHeaderHeightPercentage={14}
                 headerComponent={<AppHeader header_height={HEADER_HEIGHT}/>}
+                subHeaderComponent={
+                    <View style={{
+                        flex:1, 
+                        flexDirection: 'row',        
+                        backgroundColor: colors.white,
+                        borderColor: 'black',
+                        zIndex: 100
+                        }}
+                    >
+                        <View style={{flex:1, flexDirection: 'column-reverse' ,backgroundColor: 'blue', paddingTop:'15%'}}>
+                            <FlatList
+                                horizontal 
+                                showsHorizontalScrollIndicator={false} 
+                                data={[{category:1}]}
+                                keyExtractor={(item, index)=>index.toString()}
+                                renderItem={({item})=>
+                                    item &&
+                                    <FilterBadge text={`${item['category']}`} clear={()=>console.log(JSON.stringify(item, null, '\t'))} />
+                                }
+        
+                            > 
+                            </FlatList>
+                        </View>
+                    </View>
+                }
             >
             <View style={{width:'100%', height: '100%', paddingHorizontal: 10}}>
             {
