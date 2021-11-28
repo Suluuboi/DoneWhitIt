@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-import { Selection } from '../../screens/InputPlaygroud.Screen';
 import AppText from '../AppText';
 import Icon from '../Icon'
 import { MaterialCommunityIconsSet } from '../icon/types';

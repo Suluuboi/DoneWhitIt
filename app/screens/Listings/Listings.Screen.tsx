@@ -26,7 +26,9 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             error, 
             loading, 
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
+
     const scrollY = useRef(new Animated.Value(0)).current;
+    const [subHeaderHeightPercentage, setSubHeaderHeightPercentage] = useState(0)
     
 
     useEffect(()=>{
@@ -46,19 +48,20 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             <AnimatedCollapsingHeader
                 headerHightPixel={HEADER_HEIGHT}
                 animatedValue={scrollY}
-                subHeaderHeightPercentage={14}
-                headerComponent={<AppHeader header_height={HEADER_HEIGHT}/>}
+                subHeaderHeightPercentage={subHeaderHeightPercentage}
+                headerComponent={<AppHeader left_icon={'water'} header_height={HEADER_HEIGHT} rightIconClicked={(number)=>setSubHeaderHeightPercentage(number)}/>}
                 subHeaderComponent={
                     <View style={{
                         flex:1, 
-                        flexDirection: 'row',        
-                        backgroundColor: colors.white,
-                        borderColor: 'black',
-                        zIndex: 100
+                        //flexDirection: 'row',        
+                        //backgroundColor: colors.white,
+                        //borderColor: 'black',
+                        //zIndex: 100
                         }}
                     >
-                        <View style={{flex:1, flexDirection: 'column-reverse' ,backgroundColor: 'blue', paddingTop:'15%'}}>
+                        <View style={{flex:1, flexDirection: 'column' }}>
                             <FlatList
+                                style={{position: 'absolute', bottom: 0}}
                                 horizontal 
                                 showsHorizontalScrollIndicator={false} 
                                 data={[{category:1}]}

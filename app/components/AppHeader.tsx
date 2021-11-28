@@ -21,7 +21,7 @@ type HeaderProps = {
     right_icon?: MaterialCommunityIconsSet,
     center_text?: string,
     leftIconClicked?: () => void,
-    rightIconClicked?: () => void,
+    rightIconClicked?: (number) => void,
     header_height : number
 }
 
@@ -111,6 +111,7 @@ function AppHeader({left_icon,
                         if(search){
                             setSearch(!search)
                             setDynamicHeaderHeight(dynamicHeaderHeight-HEADER_CHANGE)
+                            rightIconClicked(0)
                         }else{
                             setSearch(!search) 
                             setDynamicHeaderHeight(dynamicHeaderHeight+HEADER_CHANGE)
@@ -132,31 +133,6 @@ function AppHeader({left_icon,
                 </TouchableOpacity>
             }
             </View>
-            {
-                (search && filterValues) &&
-                <View style={{
-                    //flex:1, 
-                    flexDirection: 'row', 
-                    backgroundColor: colors.white,
-                    borderColor: 'black',
-                    zIndex: 100
-                    }}
-                >
-                    <FlatList
-                        horizontal 
-                        showsHorizontalScrollIndicator={false} 
-                        data={[filterValues]}
-                        keyExtractor={(item, index)=>index.toString()}
-                        renderItem={({item})=>
-                            item &&
-                            <FilterBadge text={`${item['category']}`} clear={()=>console.log(JSON.stringify(item, null, '\t'))} />
-                        }
-
-                    >
-                        
-                    </FlatList>
-                </View>
-            }
 
             </View>
         </View>
@@ -167,22 +143,16 @@ function AppHeader({left_icon,
                     isVisible={showFilterModal}
                     onClose={() => setShowFilterModal(false)}
                     onFilter={(filter: FilterValues)=>{
-                        //setShowFilterModal(false)
+                        
                         setFilterValues(filter as any);
+
                         if(filter){
-                            if(filter.category || filter.priceRange){
-                                console.log('filter set')
-                                console.log(dynamicHeaderHeight , header_height)
-                                if(dynamicHeaderHeight <= header_height){
-                                    console.log('Change header')
-                                    setDynamicHeaderHeight(dynamicHeaderHeight+HEADER_CHANGE )
-                                }   
-                                
+                            if(filter.category || filter.priceRange){ 
+                                rightIconClicked(15)
                             }else{
-                                setDynamicHeaderHeight(header_height)
+
                             }
                         }
-                        //console.log(filter)
                     }}
                 />}
 
