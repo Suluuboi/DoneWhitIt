@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, View, Text, Animated } from 'react-native';
+import { StyleSheet, View, FlatList , Text, Animated, ActivityIndicator } from 'react-native';
 import openSocket from "socket.io-client";
 
 import Card from '../../components/Card';
@@ -18,14 +18,17 @@ import AppHeader from '../../components/AppHeader';
 import AnimatedCollapsingHeader from '../../components/AnimatedCollapsingHeader';
 import FilterComponent from '../../components/filter/FilterComponent';
 import { Filter } from '../../utility/types';
-import { FlatList } from 'react-native-bidirectional-infinite-scroll';
+import LottieAnimation from '../../components/LottieAnimation';
+import lottie from '../../config/lottie-animations';
 
 const HEADER_HEIGHT = 70
+const LISTING_LIMIT = 5
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
     const { data: listings, 
             error, 
+            end,
             loading, 
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
 
@@ -35,8 +38,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
     async function loadMore(){
         if(!loading)
-            loadListings(listings)
-            console.log('Load more.')
+            loadListings(LISTING_LIMIT, listings)
     }
 
     //if there are no filter left reduce the header size
@@ -54,10 +56,9 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             setSubHeaderHeightPercentage(0)
         }
     }
-    
 
     useEffect(()=>{
-        loadListings(listings);
+        loadListings(LISTING_LIMIT, listings);
         reduceHeader(filterValues)
     },[filterValues])
 
@@ -101,13 +102,13 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 (error || !listings || !Array.isArray(listings) ) && 
                 <>
                     <AppText style={styles.error_text} text={'Somthing went wrong.'}/>
-                    <AppButton  text={'Retry'} onPress={loadListings}/>
+                    <AppButton  text={'Retry'} onPress={()=>loadListings(LISTING_LIMIT, listings)}/>
                 </>
             
             }
             
             {
-                (!loading && listings && Array.isArray(listings)) &&
+                (listings && Array.isArray(listings)) &&
 
                 <FlatList style={{width: '100%'}}
                     data={listings as Listing[]} /**listings as Listing[] */
@@ -151,10 +152,19 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                         { useNativeDriver: false }
                     )}
-                    onStartReached={loadMore}
-                    onEndReached={null}
+                    onEndReached={loadMore}
                     onEndReachedThreshold={.01}
-                    ListFooterComponent={()=><LoadingActivity visable={loading}/>}
+                    ListFooterComponent={()=>
+                        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                            <LoadingActivity visable={loading}/>
+                            <LottieAnimation 
+                                lottie={lottie.complete} 
+                                visable={end}
+                                loop={false}
+                            />
+                        </View>
+                        
+                    }
                 />
 
                 
@@ -182,5 +192,11 @@ const styles = StyleSheet.create({
     error_text: {
         color: colors.danger,
         alignSelf: 'center'
+    },
+    footer: {
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
     }
 });

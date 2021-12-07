@@ -6,12 +6,11 @@ import { Listing } from "./types";
 
 const listings = '/listing';
 
-function getListings(listingsArray?: Listing[]){
+async function getListings(limit: number, listingsArray?: Listing[]){
 
-    
-    const startAt = listingsArray.length
+    const startAt = listingsArray ? listingsArray.length: 0 //where to start querying
 
-    return apiClient.get(listings, { offset : startAt} ).then((res)=>{
+    return apiClient.get(listings, { offset : startAt, limit} ).then((res)=>{
         return res as any
     })
 }

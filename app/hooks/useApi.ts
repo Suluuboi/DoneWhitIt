@@ -1,4 +1,4 @@
-import { ApiErrorResponse, ApiOkResponse } from "apisauce";
+import { ApiErrorResponse, ApiOkResponse, ApiResponse } from "apisauce";
 import { useState } from "react";
 import openSocket from "socket.io-client";
 
@@ -8,8 +8,8 @@ interface ApiReturnType {
     data: any[];
     error: boolean;
     loading: boolean;
-    newData: Array<any>
-    request: (...args: any[]) => Promise<ApiErrorResponse<unknown>>;
+    end : boolean //have we reached the end
+    request: (...args: any[]) => Promise<ApiResponse<unknown>>;
 }
 
 /*****  Get data from the server    */
@@ -19,46 +19,46 @@ export default function useApi(apiFunc, socketName?: string): ApiReturnType{
     const [ error, setError ] = useState<boolean>()
     const [ loading, setLoading ] = useState<boolean>()
     const [ listening, setListening ] = useState<boolean>(false)//check if the socketIO is enabled
+    const [ end, setEnd ] = useState<boolean>(false)
     let data2 = []
     const newData = new Array()
-    const [ oldData, setOldData ] = useState([])
+    //const [ oldData, setOldData ] = useState([])
     
     async function request(...args){
-        setLoading(true);
-        //console.log('I have arguments')
-        const response = await apiFunc(...args);
-        setLoading(false);
 
-        setError(!response.ok);
-        //setData(response.data);
+        if(!end){
 
-        if(response.data && Array.isArray(response.data)){
-            data2  = response.data.slice(0)
-
-            //setOldData(oldData.concat(newData))
-            //setData(()=>[...oldData,...newData])
-            //console.log(oldData.length)
-
-
-            ///const a = data.concat(data2)
-
-            //console.log(newData.length)
+            setLoading(true);
             
+            const response: ApiResponse<any> = await apiFunc(...args);
+            setLoading(false);
 
-            setData( prev => [...prev, ...data2]);
-        }
+            setError(!response.ok);
 
-        //old code may need review
-        if(socketName && !listening){
-            
-            if(response.ok && Array.isArray(response.data)){
-                data2 = response.data.slice(0);
-                connectToListing(socketName)
+            if(response.data && Array.isArray(response.data)){//if array
+
+                const limit = response.config?.params?.limit
+
+                if(limit){
+                    (response.data.length < limit) ? setEnd(true): null; 
+                }
+
+                setData(olData=>[...olData,...response.data]); //append new data to old data
+            }
+        
+
+            //old code may need review
+            if(socketName && !listening){
+                
+                if(response.ok && Array.isArray(response.data)){
+                    data2 = response.data.slice(0);
+                    connectToListing(socketName)
+                }
+                
             }
             
+            return response;
         }
-        
-        return response;
     }
 
     /** All the socketIO code */
@@ -85,7 +85,7 @@ export default function useApi(apiFunc, socketName?: string): ApiReturnType{
         
     };
 
-    return {error, data, newData, loading, request} 
+    return {error, data, end ,loading, request} 
 }
 
 

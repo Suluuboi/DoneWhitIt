@@ -1,18 +1,20 @@
 import AnimatedLottieView from 'lottie-react-native'
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import lottie from '../config/lottie-animations'
 
 type LoadingActivityProps = {
-    visable: boolean | undefined
+    visable : boolean | undefined,
+    style   ?: StyleProp<ViewStyle>
 }
 
-export default function LoadingActivity({visable}:LoadingActivityProps) {
+export default function LoadingActivity({visable, style}:LoadingActivityProps) {
 
     if(!visable) return null
 
     return (
         <AnimatedLottieView
+            style={[styles.animation, style]}
             autoPlay
             loop
             source={lottie.loading_dots}
@@ -20,4 +22,8 @@ export default function LoadingActivity({visable}:LoadingActivityProps) {
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    animation:{
+        height: 100
+    }
+})
