@@ -8,6 +8,7 @@ interface ApiReturnType {
     data: any[];
     error: boolean;
     loading: boolean;
+    newData: Array<any>
     request: (...args: any[]) => Promise<ApiErrorResponse<unknown>>;
 }
 
@@ -19,15 +20,35 @@ export default function useApi(apiFunc, socketName?: string): ApiReturnType{
     const [ loading, setLoading ] = useState<boolean>()
     const [ listening, setListening ] = useState<boolean>(false)//check if the socketIO is enabled
     let data2 = []
+    const newData = new Array()
+    const [ oldData, setOldData ] = useState([])
     
     async function request(...args){
         setLoading(true);
+        //console.log('I have arguments')
         const response = await apiFunc(...args);
         setLoading(false);
 
         setError(!response.ok);
-        setData(response.data);
+        //setData(response.data);
 
+        if(response.data && Array.isArray(response.data)){
+            data2  = response.data.slice(0)
+
+            //setOldData(oldData.concat(newData))
+            //setData(()=>[...oldData,...newData])
+            //console.log(oldData.length)
+
+
+            ///const a = data.concat(data2)
+
+            //console.log(newData.length)
+            
+
+            setData( prev => [...prev, ...data2]);
+        }
+
+        //old code may need review
         if(socketName && !listening){
             
             if(response.ok && Array.isArray(response.data)){
@@ -64,7 +85,7 @@ export default function useApi(apiFunc, socketName?: string): ApiReturnType{
         
     };
 
-    return {error, data, loading, request} 
+    return {error, data, newData, loading, request} 
 }
 
 

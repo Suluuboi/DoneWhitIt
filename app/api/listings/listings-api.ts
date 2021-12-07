@@ -5,10 +5,13 @@ import apiClient from "../client"
 import { Listing } from "./types";
 
 const listings = '/listing';
-const a = ''
 
-function getListings(){
-    return apiClient.get(listings).then((res)=>{
+function getListings(listingsArray?: Listing[]){
+
+    
+    const startAt = listingsArray.length
+
+    return apiClient.get(listings, { offset : startAt} ).then((res)=>{
         return res as any
     })
 }

@@ -10,5 +10,5 @@ export type FilterValues = {
 
 export type Filter = {
     search?: string,
-    filterValues?: FilterValues
+    filter?: FilterValues
 }

@@ -6,7 +6,7 @@ export type Selection ={
     value: number,
     icon?: MaterialCommunityIconsSet,
     background_color?: string 
-  }
+}
 
 const categories : Selection[] = [
     {label:"Funiture", value:1, icon: 'chair-rolling', background_color : defaultStyles.colors.primary },
@@ -17,6 +17,14 @@ const categories : Selection[] = [
     {label:"Sport", value:6, icon: 'tennis', background_color: defaultStyles.colors.dark_gey}
 ]
 
+const categoriesShallowCopy: Selection[] = JSON.parse(JSON.stringify(categories))//make a copy of the array without taking the reference.
+
+//get the category name of the given category ID
+function getCategoryName(categoryId: number){
+    var filtered = categoriesShallowCopy.filter((a)=>a.value = categoryId);
+    return filtered[0].label
+}
+
 export default {
-    categories
+    categories, getCategoryName
 }

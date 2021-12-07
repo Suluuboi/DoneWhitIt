@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View, Image, StyleSheet, Animated, FlatList} from 'react-native';
+import { TouchableOpacity, View, StyleSheet} from 'react-native';
 import Constants from 'expo-constants'
 import * as Yup from 'yup'
 
@@ -7,22 +7,23 @@ import colors from '../config/colors';
 import AppText from './AppText';
 import Icon from './Icon';
 import { MaterialCommunityIconsSet } from './icon/types';
-import AppTextInput from './form/AppTextInput';
 import { AppFormFieldFormik, AppFormFormik } from './form/formik';
 import FilterModal  from '../screens/Listings/FilterModal'
 import { Filter, FilterValues } from '../utility/types';
-import FilterBadge from './filter/FilterBadge';
 
 const HEADER_CHANGE = 50;
 
 
 type HeaderProps = {
-    left_icon?: MaterialCommunityIconsSet,
-    right_icon?: MaterialCommunityIconsSet,
-    center_text?: string,
-    leftIconClicked?: () => void,
-    rightIconClicked?: (number) => void,
-    header_height : number
+    left_icon           ?: MaterialCommunityIconsSet,
+    right_icon          ?: MaterialCommunityIconsSet,
+    center_text         ?: string,
+    leftIconClicked     ?: () => void,
+    rightIconClicked    ?: () => void,
+    header_height       : number
+    //changeHeader        ?: (number)=>void
+    filter              ?: Filter
+    changeSearchFilter  ?: (filter)=>void
 }
 
 const validationSchema = Yup.object().shape({
@@ -34,12 +35,14 @@ function AppHeader({left_icon,
                     center_text, 
                     leftIconClicked, 
                     rightIconClicked, 
+                    filter,
+                    changeSearchFilter,
                     header_height=50}:HeaderProps){
 
     const [search, setSearch ] = useState(false)
     const [showFilterModal, setShowFilterModal] = useState(false)
-    const [filterValues, setFilterValues] = useState<Filter | undefined>()
-    const [dynamicHeaderHeight, setDynamicHeaderHeight] = useState(header_height)
+    
+    //const [dynamicHeaderHeight, setDynamicHeaderHeight] = useState(header_height)
 
     return(
         <>
@@ -86,7 +89,7 @@ function AppHeader({left_icon,
                                 search: ''
                             }}
                             onSubmit={(value, formicHelper)=>{
-                                console.log({filterValues,...value})
+                                changeSearchFilter({...filter, ...value})
                             }}
                             validationSchema={validationSchema}
                         >
@@ -110,11 +113,9 @@ function AppHeader({left_icon,
                     onPress={()=>{
                         if(search){
                             setSearch(!search)
-                            setDynamicHeaderHeight(dynamicHeaderHeight-HEADER_CHANGE)
-                            rightIconClicked(0)
+                            changeSearchFilter(undefined)
                         }else{
                             setSearch(!search) 
-                            setDynamicHeaderHeight(dynamicHeaderHeight+HEADER_CHANGE)
                         }
                     }}
                 >
@@ -144,15 +145,15 @@ function AppHeader({left_icon,
                     onClose={() => setShowFilterModal(false)}
                     onFilter={(filter: FilterValues)=>{
                         
-                        setFilterValues(filter as any);
+                        changeSearchFilter({filter :filter});
 
-                        if(filter){
+                        /*if(filter){
                             if(filter.category || filter.priceRange){ 
-                                rightIconClicked(15)
+                                //changeHeader(15)
                             }else{
 
                             }
-                        }
+                        }*/
                     }}
                 />}
 

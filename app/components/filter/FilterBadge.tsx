@@ -20,7 +20,12 @@ export default function FilterBadge({text, clear}: FilterBadgeProps) {
             
                 
                 <View style={styles.text_container}>
-                    <IconButton onPress={clear} icon={'close-circle'}  />
+                    <IconButton 
+                        iconStyle={{color: colors.medium_grey}}
+                        onPress={clear} 
+                        icon={'close-circle'}  
+                        
+                    />
                     <View style={styles.wrap}>
                         <Text>{text}</Text>
                     </View>

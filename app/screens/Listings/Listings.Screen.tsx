@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, FlatList, View, Text, Animated } from 'react-native';
+import { StyleSheet, View, Text, Animated } from 'react-native';
 import openSocket from "socket.io-client";
 
 import Card from '../../components/Card';
@@ -16,7 +16,9 @@ import serverInfo from '../../utility/serverInfo';
 import images from '../../config/images';
 import AppHeader from '../../components/AppHeader';
 import AnimatedCollapsingHeader from '../../components/AnimatedCollapsingHeader';
-import FilterBadge from '../../components/filter/FilterBadge';
+import FilterComponent from '../../components/filter/FilterComponent';
+import { Filter } from '../../utility/types';
+import { FlatList } from 'react-native-bidirectional-infinite-scroll';
 
 const HEADER_HEIGHT = 70
 
@@ -28,52 +30,68 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
 
     const scrollY = useRef(new Animated.Value(0)).current;
-    const [subHeaderHeightPercentage, setSubHeaderHeightPercentage] = useState(0)
+    const [subHeaderHeightPercentage, setSubHeaderHeightPercentage] = useState<number>(0)
+    const [filterValues, setFilterValues] = useState<Filter | undefined>()
+
+    async function loadMore(){
+        if(!loading)
+            loadListings(listings)
+            console.log('Load more.')
+    }
+
+    //if there are no filter left reduce the header size
+    function reduceHeader(filterObject: Filter){
+
+        console.log(filterObject)
+
+        if(filterObject?.filter){
+            if(!filterObject.filter.category && !filterObject.filter.priceRange){
+                setSubHeaderHeightPercentage(0)//remove header
+            }else{
+                setSubHeaderHeightPercentage(15)
+            }
+        }else{
+            setSubHeaderHeightPercentage(0)
+        }
+    }
     
 
     useEffect(()=>{
-        loadListings();
-    },[])
+        loadListings(listings);
+        reduceHeader(filterValues)
+    },[filterValues])
 
     return (
         <CustomSafeAreaView>
 
-            {/*<AppHeader 
-                left_icon={'water'} 
-                center_text={'WuZa'} 
-                right_icon={'magnify'}
-                //animatedValue={scrollY} 
-                header_height = {header_height}
-            />*/}
             <AnimatedCollapsingHeader
                 headerHightPixel={HEADER_HEIGHT}
                 animatedValue={scrollY}
                 subHeaderHeightPercentage={subHeaderHeightPercentage}
-                headerComponent={<AppHeader left_icon={'water'} header_height={HEADER_HEIGHT} rightIconClicked={(number)=>setSubHeaderHeightPercentage(number)}/>}
-                subHeaderComponent={
-                    <View style={{
-                        flex:1, 
-                        //flexDirection: 'row',        
-                        //backgroundColor: colors.white,
-                        //borderColor: 'black',
-                        //zIndex: 100
-                        }}
-                    >
-                        <View style={{flex:1, flexDirection: 'column' }}>
-                            <FlatList
-                                style={{position: 'absolute', bottom: 0}}
-                                horizontal 
-                                showsHorizontalScrollIndicator={false} 
-                                data={[{category:1}]}
-                                keyExtractor={(item, index)=>index.toString()}
-                                renderItem={({item})=>
-                                    item &&
-                                    <FilterBadge text={`${item['category']}`} clear={()=>console.log(JSON.stringify(item, null, '\t'))} />
+                headerComponent={<AppHeader left_icon={'water'} 
+                                            header_height={HEADER_HEIGHT} 
+                                            changeSearchFilter={(filter)=>{
+                                                //console.log(filter)
+                                                if(filter)
+                                                    setFilterValues({...filterValues,...filter})
+                                                else
+                                                    setFilterValues(undefined)
+                                            }}
+                                            filter={filterValues}
+                                    />
                                 }
-        
-                            > 
-                            </FlatList>
-                        </View>
+                subHeaderComponent={
+                    <View style={{flex:1}}>
+                        <FilterComponent
+                            filter={filterValues}
+                            clearFilter={(key)=>{
+                                var a = {...filterValues}
+                                delete a.filter[key]
+                                //console.log(a)
+                                setFilterValues({...filterValues,...a})
+                                
+                            }}
+                        />
                     </View>
                 }
             >
@@ -88,12 +106,10 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             
             }
             
-            <LoadingActivity visable={loading}/>
-            
             {
                 (!loading && listings && Array.isArray(listings)) &&
 
-                <FlatList style={{width: '100%', paddingTop: HEADER_HEIGHT + 10}}
+                <FlatList style={{width: '100%'}}
                     data={listings as Listing[]} /**listings as Listing[] */
                     keyExtractor={(item)=>item.listingId}
                     renderItem={({item})=>
@@ -115,12 +131,15 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                                             userId: item.userId
                                         }
                                 )
-                                
                             }
                         />
                     }
+                    contentContainerStyle={{
+                        paddingTop: HEADER_HEIGHT + subHeaderHeightPercentage + 10,
+                        //paddingBottom: HEADER_HEIGHT
+                    }}
                     showsVerticalScrollIndicator={false}
-                    scrollEventThrottle={16}
+                    scrollEventThrottle={150}
                     ListEmptyComponent={()=>
 
                         <AppText 
@@ -132,10 +151,16 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                         { useNativeDriver: false }
                     )}
+                    onStartReached={loadMore}
+                    onEndReached={null}
+                    onEndReachedThreshold={.01}
+                    ListFooterComponent={()=><LoadingActivity visable={loading}/>}
                 />
 
                 
             }
+            
+            {/**<Text>{JSON.stringify(filterValues, null, '\t')}</Text>*/}
             </View>
             </AnimatedCollapsingHeader>
             
