@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, View, FlatList , Text, Animated, ActivityIndicator } from 'react-native';
-import openSocket from "socket.io-client";
+import { StyleSheet, View, FlatList , Animated } from 'react-native';
 
 import Card from '../../components/Card';
 import CustomSafeAreaView from '../../components/CustomSafeAreaView';
@@ -12,7 +11,6 @@ import AppText from '../../components/AppText';
 import AppButton from '../../components/AppButton';
 import LoadingActivity from '../../components/LoadingActivity';
 import useApi from '../../hooks/useApi';
-import serverInfo from '../../utility/serverInfo';
 import images from '../../config/images';
 import AppHeader from '../../components/AppHeader';
 import AnimatedCollapsingHeader from '../../components/AnimatedCollapsingHeader';
@@ -31,7 +29,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             end,
             loading, 
             request: loadListings} = useApi(listingsApi.getListings, 'listing')
-
+ 
     const scrollY = useRef(new Animated.Value(0)).current;
     const [subHeaderHeightPercentage, setSubHeaderHeightPercentage] = useState<number>(0)
     const [filterValues, setFilterValues] = useState<Filter | undefined>()
@@ -41,11 +39,18 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             loadListings(LISTING_LIMIT, listings)
     }
 
+    function renderErrorComponent(){
+        return (
+            <View style={{paddingTop: HEADER_HEIGHT + subHeaderHeightPercentage + 10 }}>
+                <AppText style={styles.error_text} text={'Somthing went wrong.'}/>
+                <AppButton  text={'Retry'} onPress={()=>loadListings(LISTING_LIMIT, listings)}/>
+            </View>
+        )
+    }
+
     //if there are no filter left reduce the header size
     function reduceHeader(filterObject: Filter){
-
         console.log(filterObject)
-
         if(filterObject?.filter){
             if(!filterObject.filter.category && !filterObject.filter.priceRange){
                 setSubHeaderHeightPercentage(0)//remove header
@@ -69,18 +74,21 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 headerHightPixel={HEADER_HEIGHT}
                 animatedValue={scrollY}
                 subHeaderHeightPercentage={subHeaderHeightPercentage}
-                headerComponent={<AppHeader left_icon={'water'} 
-                                            header_height={HEADER_HEIGHT} 
-                                            changeSearchFilter={(filter)=>{
-                                                //console.log(filter)
-                                                if(filter)
-                                                    setFilterValues({...filterValues,...filter})
-                                                else
-                                                    setFilterValues(undefined)
-                                            }}
-                                            filter={filterValues}
-                                    />
-                                }
+                headerComponent={
+                    <AppHeader 
+                        left_icon={'water'} 
+                        header_height={HEADER_HEIGHT} 
+                        filter={filterValues}
+                        changeSearchFilter={(filter)=>{
+                            
+                            if(filter)
+                                setFilterValues({...filterValues,...filter})
+                                else
+                                setFilterValues(undefined)
+                        }}
+                        
+                    />
+                }
                 subHeaderComponent={
                     <View style={{flex:1}}>
                         <FilterComponent
@@ -88,9 +96,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                             clearFilter={(key)=>{
                                 var a = {...filterValues}
                                 delete a.filter[key]
-                                //console.log(a)
                                 setFilterValues({...filterValues,...a})
-                                
                             }}
                         />
                     </View>
@@ -98,28 +104,27 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
             >
             <View style={{width:'100%', height: '100%', paddingHorizontal: 10}}>
             {
-                
-                (error || !listings || !Array.isArray(listings) ) && 
-                <>
-                    <AppText style={styles.error_text} text={'Somthing went wrong.'}/>
-                    <AppButton  text={'Retry'} onPress={()=>loadListings(LISTING_LIMIT, listings)}/>
-                </>
-            
+                (error && !listings || !Array.isArray(listings) ) && 
+                renderErrorComponent()
             }
             
             {
                 (listings && Array.isArray(listings)) &&
 
-                <FlatList style={{width: '100%'}}
+                <FlatList 
+                    style={{width: '100%'}}
                     data={listings as Listing[]} /**listings as Listing[] */
                     keyExtractor={(item)=>item.listingId}
+                    showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={150}
+                    onEndReached={loadMore}
+                    onEndReachedThreshold={.01}
                     renderItem={({item})=>
-                        /**getImagePath(item)+'/'+item.images[0].uri+'_full.jpg' */
                         <Card 
                             image_url={ item.images ? item.images[0]?.uri : images.no_image }
                             thumbnail_url={item.images ? item.images[0]?.thumbnailUrl : images.no_image }
                             title={item.title}
-                            sub_title={item.price}    
+                            sub_title={`N$ ${item.price}`}    
                             onPress={()=>
                                     navigation.navigate(FeedNavigationPages.ListingDetails, 
                                         {
@@ -137,25 +142,23 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                     }
                     contentContainerStyle={{
                         paddingTop: HEADER_HEIGHT + subHeaderHeightPercentage + 10,
-                        //paddingBottom: HEADER_HEIGHT
                     }}
-                    showsVerticalScrollIndicator={false}
-                    scrollEventThrottle={150}
                     ListEmptyComponent={()=>
-
+                        !error ? 
                         <AppText 
                             style={{textAlign: 'center'}} 
                             text={'No Listing Currently Posted, Come back later.'}
-                        />
+                        />:
+                        renderErrorComponent()
                     }
                     onScroll={Animated.event(
                         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                         { useNativeDriver: false }
                     )}
-                    onEndReached={loadMore}
-                    onEndReachedThreshold={.01}
                     ListFooterComponent={()=>
-                        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                        <View 
+                            style={{flexDirection: 'row', justifyContent: 'center'}}
+                        >
                             <LoadingActivity visable={loading}/>
                             <LottieAnimation 
                                 lottie={lottie.complete} 
@@ -163,7 +166,6 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                                 loop={false}
                             />
                         </View>
-                        
                     }
                 />
 

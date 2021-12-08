@@ -17,7 +17,6 @@ async function getListings(limit: number, listingsArray?: Listing[]){
 
 async function getUserListing(){
     const { userId } = await authStorage.getUser();
-    //console.log(userId)
     return apiClient.get(`/user/${userId}/listings`)
 }
 

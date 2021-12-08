@@ -24,7 +24,13 @@ apiClient.get = async (url, params, axiosConfig) =>{
         //response.data
         response.data = await serverInfo.addFullAndThumbnailImage(response.data)
 
-        cache.store(url, response.data);
+        const oldData = await cache.get(url);
+
+        if(Array.isArray(oldData)){
+            cache.store(url, [...oldData,...response.data]);//add the old to new data
+        }else{
+            cache.store(url, response.data);
+        }
 
         return response;
     }
