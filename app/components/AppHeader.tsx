@@ -146,14 +146,6 @@ function AppHeader({left_icon,
                     onFilter={(filter: FilterValues)=>{
                         
                         changeSearchFilter({filter :filter});
-
-                        /*if(filter){
-                            if(filter.category || filter.priceRange){ 
-                                //changeHeader(15)
-                            }else{
-
-                            }
-                        }*/
                     }}
                 />}
 

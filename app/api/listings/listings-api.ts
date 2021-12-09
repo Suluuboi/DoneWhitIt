@@ -1,16 +1,21 @@
 import { useContext } from "react";
 import authStorage from "../../auth/auth-storage";
 import AuthContext from "../../auth/context";
+import serverInfo from "../../utility/serverInfo";
+import { Filter } from "../../utility/types";
 import apiClient from "../client"
-import { Listing } from "./types";
+import { Listing, WhereQueryOptions } from "./types";
 
 const listings = '/listing';
 
-async function getListings(limit: number, listingsArray?: Listing[]){
+async function getListings(limit: number, listingsArray?: Listing[],filterO?:Filter){
 
-    const startAt = listingsArray ? listingsArray.length: 0 //where to start querying
+    const startAt = listingsArray ? listingsArray.length: 0 //where to start querying;
+    //console.log(filter)
 
-    return apiClient.get(listings, { offset : startAt, limit} ).then((res)=>{
+    const filter = serverInfo.createSeverFilter(filterO)
+
+    return apiClient.get(listings, { offset : startAt, limit, filter } ).then((res)=>{
         return res as any
     })
 }

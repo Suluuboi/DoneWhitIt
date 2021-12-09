@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import constants from '../../config/constants'
-import { Filter, FilterValues } from '../../utility/types'
+import { Filter } from '../../utility/types'
 import FilterBadge from './FilterBadge'
 
 type FilterComponoentProps = {
@@ -26,22 +26,22 @@ export default function FilterComponent({filter, clearFilter}: FilterComponoentP
                             <>
 
                                 <>{
-                                    item.filter.category &&
+                                    item.filter.categoryId &&
                                     <FilterBadge
-                                        text={`Category: ${constants.getCategoryName(item.filter.category)}`} 
+                                        text={`Category: ${constants.getCategoryName(item.filter.categoryId)}`} 
                                         clear={()=>{
-                                            clearFilter('category')
+                                            clearFilter('categoryId')
                                             //console.log(JSON.stringify(item, null, '\t'))
                                         }}
                                     />
                                 }</>
 
                                 <>{
-                                    item.filter.priceRange &&
+                                    item.filter.price &&
                                     <FilterBadge
-                                        text={`Price: N$${item.filter.priceRange[0]} - N$${item.filter.priceRange[1]}`} 
+                                        text={`Price: N$${item.filter.price[0]} - N$${item.filter.price[1]}`} 
                                         clear={()=>{
-                                            clearFilter('priceRange')
+                                            clearFilter('price')
                                             //console.log(JSON.stringify(item, null, '\t'))
                                         }}
                                     />

@@ -36,7 +36,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
     async function loadMore(){
         if(!loading)
-            loadListings(LISTING_LIMIT, listings)
+            loadListings(LISTING_LIMIT, listings,filterValues)
     }
 
     function renderErrorComponent(){
@@ -50,9 +50,9 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
     //if there are no filter left reduce the header size
     function reduceHeader(filterObject: Filter){
-        console.log(filterObject)
+        //console.log(filterObject)
         if(filterObject?.filter){
-            if(!filterObject.filter.category && !filterObject.filter.priceRange){
+            if(!filterObject.filter.categoryId && !filterObject.filter.price){
                 setSubHeaderHeightPercentage(0)//remove header
             }else{
                 setSubHeaderHeightPercentage(15)
@@ -63,7 +63,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
     }
 
     useEffect(()=>{
-        loadListings(LISTING_LIMIT, listings);
+        loadListings(LISTING_LIMIT, listings, filterValues);
         reduceHeader(filterValues)
     },[filterValues])
 
@@ -113,7 +113,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
                 <FlatList 
                     style={{width: '100%'}}
-                    data={listings as Listing[]} /**listings as Listing[] */
+                    data={listings as Listing[]}
                     keyExtractor={(item)=>item.listingId}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={150}
@@ -172,7 +172,6 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                 
             }
             
-            {/**<Text>{JSON.stringify(filterValues, null, '\t')}</Text>*/}
             </View>
             </AnimatedCollapsingHeader>
             
@@ -188,8 +187,6 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       backgroundColor: colors.light_grey,
       height: '100%'
-      //justifyContent: 'center',
-      //alignItems: 'center'
     },
     error_text: {
         color: colors.danger,

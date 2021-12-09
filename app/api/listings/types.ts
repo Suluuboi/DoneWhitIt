@@ -34,3 +34,10 @@ export type Listing = {
     userId      :   number,
     location    ?:   location
 }
+
+export type WhereQueryOptions = {
+    //{key:'catedoryId', operation: '=', value: 2}
+    key: string,
+    operation: string,
+    value: any
+}

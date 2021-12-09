@@ -1,5 +1,6 @@
 import { number } from "yup/lib/locale";
-import { Listing } from "../api/listings/types";
+import { Listing, WhereQueryOptions } from "../api/listings/types";
+import { Filter } from "./types";
 
 const initialIp = '172.16.48.219'
 const initialPort = '9100';
@@ -72,6 +73,72 @@ function getImagePath(listing:Listing){
 
 }
 
+//format filter to one that is understuded by the server
+function createSeverFilter(filter: Filter){
+    //console.log(filter?.filter)
+    const query: WhereQueryOptions[] = []
+
+    //get from filter
+    const f = filter?.filter
+
+    if(f){
+
+        const objectKeys = Object.keys(f)
+        
+        if(objectKeys.length > 0){//if there is any filter
+
+            for(let key of objectKeys){
+
+                const operation = getOperation(key)
+
+                query.push({key:key, operation:operation, value: f[`${key}`]})
+            }
+
+        }
+    }
+
+    //get from the search
+
+    if(filter?.search){
+
+        const s  = filter?.search
+
+        const objectKeys = Object.keys({search: s})
+
+        for(let key of objectKeys){
+            const operation = getOperation(key)
+            query.push({key: `title`, operation: operation, value: `${filter[key]}%`})
+        }
+
+    }
+
+    return query;
+}
+
 export default{
-    getImagePath, getIpAddress, getPort, getServerUrl, addFullAndThumbnailImage
+    getImagePath, getIpAddress, getPort, getServerUrl, addFullAndThumbnailImage, createSeverFilter
+}
+
+function getOperation(key){
+    let operation = '='
+
+
+    switch (key) {
+        case 'categoryId':
+        operation = '='
+        break;
+
+        case 'price':
+            operation = 'BETWEEN'
+            break;
+
+        case 'search':
+            operation = 'LIKE'
+            break;
+                
+        default:
+        operation = '='
+        break;
+    }
+    return operation
 }

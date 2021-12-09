@@ -35,9 +35,9 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
 
     const [showFilterModal, setShowFilterModal] = React.useState(isVisible)
 
-    const [priceRange, setPriceRange] = React.useState<undefined | any[]>()
-    const [category, setCategory] = React.useState<undefined | number>()
-    const debouncePriceRange = useCallback(debounce((nextValue) => setPriceRange(nextValue) , 100), [])
+    const [price, setPrice] = React.useState<undefined | any[]>()
+    const [categoryId, setCategoryId] = React.useState<undefined | number>()
+    const debouncePriceRange = useCallback(debounce((nextValue) => setPrice(nextValue) , 100), [])
 
     React.useEffect(() => {
         if (showFilterModal) {
@@ -69,7 +69,6 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
                 <View
                     style={{
                         flexDirection: 'row',
-                        //marginHorizontal: 10,
                         marginTop: 30,
                         marginBottom: 20
                     }}
@@ -102,7 +101,7 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
                     }}
                 >
                     <TwoPointSlider
-                        values={priceRange? priceRange : [100, 2200]}
+                        values={price? price : [100, 2200]}
                         min={1}
                         max={10000}
                         prefix="N$"
@@ -132,7 +131,7 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
                                 key={`Tags-${index}`}
                                 label={item.label}
                                 labelStyle={{
-                                    color: item.value == category ? colors.white : colors.meduim_grey
+                                    color: item.value == categoryId ? colors.white : colors.meduim_grey
                                 }}
                                 buttonContainerStyle={{
                                     height: 50,
@@ -140,9 +139,9 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
                                     paddingHorizontal: SIZES.padding,
                                     alignItems: 'center',
                                     borderRadius: 8,
-                                    backgroundColor: item.value == category ? colors.primary : colors.light_grey
+                                    backgroundColor: item.value == categoryId ? colors.primary : colors.light_grey
                                 }}
-                                onPress={() => setCategory(item.value)}
+                                onPress={() => setCategoryId(item.value)}
                             />
                         )
                     })}
@@ -249,8 +248,8 @@ export default function FilterModal({ isVisible, onClose, onFilter }) {
                             onPress={()=>{
                                 onFilter(
                                     {
-                                        category,
-                                        priceRange
+                                        categoryId,
+                                        price
                                     }
                                 )
                                 setShowFilterModal(false)

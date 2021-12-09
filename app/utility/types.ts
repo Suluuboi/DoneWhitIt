@@ -4,8 +4,8 @@ export type CacheItem = {
 }
 
 export type FilterValues = {
-    priceRange ?: any[],//eg. [10, 20]
-    category ?: number
+    price ?: any[],//eg. [10, 20] //price range
+    categoryId ?: number
 } 
 
 export type Filter = {
