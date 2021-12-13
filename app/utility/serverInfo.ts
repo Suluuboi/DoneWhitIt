@@ -2,7 +2,7 @@ import { number } from "yup/lib/locale";
 import { Listing, WhereQueryOptions } from "../api/listings/types";
 import { Filter } from "./types";
 
-const initialIp = '172.16.48.219'
+const initialIp = '192.168.178.33'
 const initialPort = '9100';
 const initialURL = `http://${initialIp}:${initialPort}`
 const initialImagePath = `${initialURL}/assets` 
@@ -90,8 +90,10 @@ function createSeverFilter(filter: Filter){
             for(let key of objectKeys){
 
                 const operation = getOperation(key)
-
-                query.push({key:key, operation:operation, value: f[`${key}`]})
+                if(f[key]){ //if there is a value
+                    query.push({key:key, operation:operation, value: f[key]})
+                }
+                
             }
 
         }
@@ -107,7 +109,7 @@ function createSeverFilter(filter: Filter){
 
         for(let key of objectKeys){
             const operation = getOperation(key)
-            query.push({key: `title`, operation: operation, value: `${filter[key]}%`})
+            query.push({key: `title`, operation: operation, value: `%${filter[key]}%`})
         }
 
     }

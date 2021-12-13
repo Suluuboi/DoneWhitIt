@@ -14,15 +14,24 @@ interface ApiReturnType {
 
 /*****  Get data from the server    */
 
-export default function useApi(apiFunc, socketName?: string): ApiReturnType{
+export default function useApi(apiFunc, filterValue?, socketName?: string): ApiReturnType{
     const [ data, setData   ] = useState<any>([]);
     const [ error, setError ] = useState<boolean>()
     const [ loading, setLoading ] = useState<boolean>()
     const [ listening, setListening ] = useState<boolean>(false)//check if the socketIO is enabled
+    const [ filter, setFilter ] = useState()
     const [ end, setEnd ] = useState<boolean>(false)
-    let data2 = []
-    const newData = new Array()
-    //const [ oldData, setOldData ] = useState([])
+    let data2 = [];
+
+    if(JSON.stringify(filterValue) === JSON.stringify(filter)){
+
+    }else{
+        console.log('new filter')
+        
+        setFilter(filterValue)
+        setData([])
+        setEnd(false)
+    }
     
     async function request(...args){
 

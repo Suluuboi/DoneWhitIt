@@ -24,15 +24,17 @@ const LISTING_LIMIT = 5
 
 function ListingsScreen({navigation, route}: ListingsSceenProps) {
 
+    const [filterValues, setFilterValues] = useState<Filter | undefined>()
+
     const { data: listings, 
             error, 
             end,
             loading, 
-            request: loadListings} = useApi(listingsApi.getListings, 'listing')
+            request: loadListings} = useApi(listingsApi.getListings,filterValues, 'listing')
  
     const scrollY = useRef(new Animated.Value(0)).current;
     const [subHeaderHeightPercentage, setSubHeaderHeightPercentage] = useState<number>(0)
-    const [filterValues, setFilterValues] = useState<Filter | undefined>()
+    
 
     async function loadMore(){
         if(!loading)
@@ -63,6 +65,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
     }
 
     useEffect(()=>{
+        //console.log('filter changes')
         loadListings(LISTING_LIMIT, listings, filterValues);
         reduceHeader(filterValues)
     },[filterValues])
@@ -80,7 +83,7 @@ function ListingsScreen({navigation, route}: ListingsSceenProps) {
                         header_height={HEADER_HEIGHT} 
                         filter={filterValues}
                         changeSearchFilter={(filter)=>{
-                            
+                            //console.log(filter)
                             if(filter)
                                 setFilterValues({...filterValues,...filter})
                                 else
